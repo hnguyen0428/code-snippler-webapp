@@ -6,8 +6,20 @@ import theme from './assets/react-toolbox/theme';
 import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
 import Button from 'react-toolbox/lib/button/Button';
 import Input from 'react-toolbox/lib/input/Input';
+import DatePicker from 'react-toolbox/lib/date_picker/DatePicker';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: ''
+        }
+    }
+
+    updateText = (text) => {
+        this.setState({text: text});
+    };
+
     render() {
         return (
             <ThemeProvider theme={theme}>
@@ -18,7 +30,15 @@ class App extends Component {
                     </header>
 
                     <Button raised primary>Test Button</Button>
-                    <Input type='text' label='Name' name='name' maxLength={16} />
+                    <button>React Button</button>
+                    <div style={{width: '500px', marginLeft: '50%', transform: 'translateX(-50%)'}}>
+                        <Input type='text' label='Name' name='name' maxLength={16} value={this.state.text} onChange={this.updateText} />
+                    </div>
+
+                    <div style={{width: '500px', marginLeft: '50%', transform: 'translateX(-50%)'}}>
+                        <DatePicker label='Birthdate' sundayFirstDayOfWeek/>
+                    </div>
+
                 </div>
             </ThemeProvider>
         );
