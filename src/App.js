@@ -12,12 +12,7 @@ import 'brace/mode/java';
 import 'brace/theme/github';
 
 
-// import SnipplerClient from './api/SnipplerClient';
-// let client = new SnipplerClient({
-//     baseUrl: 'http://localhost:8080',
-//     clientKey: 'vEysoE5HxX_rRADv1BDJ_v19KoKun6x49p4rq3ZYVxxTtYFc9r-beDh--a1Y8E5GbCpOKEHgJhCvsrnrtbFRomI8TNRNEyStBzUe6UUtgc9gsKBV8bDf6O71j6mk_WA-nYrD-AHHIhf3RI8rls7vNHmQLyPHxA2CDEjiDEkMhYA'
-// });
-// client.snippet().getSnippet('5b5e29838bf2d8265b68e3ff');
+import {Provider} from 'react-redux';
 
 class App extends Component {
     constructor(props) {

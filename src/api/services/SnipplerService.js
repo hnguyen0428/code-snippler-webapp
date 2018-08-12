@@ -53,10 +53,7 @@ export default class SnipplerService {
         else {
             console.log(error.response);
             if (callback) {
-                if (error.response)
-                    callback(null, error.response.data);
-                else
-                    callback(null, error.message);
+                callback(null, error);
             }
         }
     }
