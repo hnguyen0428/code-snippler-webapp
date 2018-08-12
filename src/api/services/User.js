@@ -35,7 +35,7 @@ export default class User extends SnipplerService {
     }
 
 
-    getMyProfile(params, callback) {
+    getMe(params, callback) {
         let config = {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.getMe.value),
             method: ENDPOINTS.getMe.method,

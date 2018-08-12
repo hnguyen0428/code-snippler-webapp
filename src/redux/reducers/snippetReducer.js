@@ -1,5 +1,7 @@
 import {CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
-    SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES} from '../actions/types';
+    SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES,
+    FETCH_MY_SAVED_SNIPPETS, FETCH_MY_CREATED_SNIPPETS, FETCH_USER_SAVED_SNIPPETS,
+    FETCH_USER_CREATED_SNIPPETS, FETCH_SNIPPETS} from '../actions/types';
 
 
 const initialState = {
@@ -73,6 +75,11 @@ export default function(state = initialState, action) {
         case FETCH_MOST_UPVOTES:
         case FETCH_MOST_VIEWS:
         case FETCH_MOST_SAVED:
+        case FETCH_USER_SAVED_SNIPPETS:
+        case FETCH_USER_CREATED_SNIPPETS:
+        case FETCH_MY_SAVED_SNIPPETS:
+        case FETCH_MY_CREATED_SNIPPETS:
+        case FETCH_SNIPPETS:
             let byIds = state.byIds;
             let snippets = action.payload;
             snippets.forEach(snippet => {

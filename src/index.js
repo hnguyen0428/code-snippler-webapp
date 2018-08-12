@@ -18,7 +18,7 @@ if (apiKey) {
         store.dispatch({type: LOGIN, payload: user});
     }
     else {
-        Snippler.user().getMyProfile(null, (res, error) => {
+        Snippler.user().getMe(null, (res, error) => {
             let success = handleActionsResult(res, error, null, null);
             if (success)
                 store.dispatch({type: LOGIN, payload: res.data});
