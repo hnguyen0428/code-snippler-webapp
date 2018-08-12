@@ -12,7 +12,7 @@ export const login = (username, password, callback, noResCB) => dispatch => {
         if (success)
             dispatch({
                 type: LOGIN,
-                payload: res
+                payload: res.data
             });
     });
 };
@@ -27,7 +27,7 @@ export const register = (username, password, callback, noResCB) => dispatch => {
         if (success)
             dispatch({
                 type: REGISTER,
-                payload: res
+                payload: res.data
             });
     });
 };

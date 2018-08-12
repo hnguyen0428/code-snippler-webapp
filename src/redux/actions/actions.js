@@ -1,5 +1,6 @@
 
 
+// This callback gives back the JSON, not the user data
 export const handleActionsResult = (data, error, callback, noResCB) => {
     if (data) {
         callback(data, null);
@@ -8,12 +9,14 @@ export const handleActionsResult = (data, error, callback, noResCB) => {
     else if (error) {
         if (error.response) {
             // Able to reach the server and server responds with a bad request code
-            callback(null, error.response.data);
+            if (callback)
+                callback(null, error.response.data);
         }
         else {
             // Unable to get a response from server
             console.log(error);
-            noResCB(error);
+            if (noResCB)
+                noResCB(error);
         }
     }
     return false;
