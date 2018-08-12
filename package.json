@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^1.4.3",
+    "axios": "^0.18.0",
+    "querystring": "^0.2.0",
     "react": "^16.4.2",
+    "react-ace": "^6.1.4",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.2",
     "react-scripts": "1.1.4",
     "react-toolbox": "^2.0.0-beta.13",
-    "react-toolbox-themr": "^1.0.2"
+    "react-toolbox-themr": "^1.0.2",
+    "redux": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
