@@ -1,7 +1,9 @@
 import Snippler from '../../api/SnipplerClient';
-import {CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
+import {
+    CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
     SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES,
-    FETCH_COMMENTS, FETCH_USER} from '../actions/types';
+    FETCH_COMMENTS, FETCH_USER, CREATE_COMMENT, FETCH_SNIPPETS
+} from '../actions/types';
 import {handleActionsResult} from './actions';
 
 
@@ -108,6 +110,45 @@ export const saveSnippet = (snippetId, save, callback, noResCB) => dispatch => {
             });
         }
     });
+};
+
+
+export const createComment = (snippetId, params, callback, noResCB) => dispatch => {
+    Snippler.snippet().createComment(snippetId, params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({
+                type: CREATE_COMMENT,
+                payload: res.data
+            });
+        }
+    })
+};
+
+
+export const fetchComments = (snippetId, params, callback, noResCB) => dispatch => {
+    Snippler.snippet().getComments(snippetId, params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({
+                type: FETCH_COMMENTS,
+                payload: res.data
+            });
+        }
+    })
+};
+
+
+export const searchSnippets = (params, callback, noResCB) => dispatch => {
+    Snippler.snippet().searchSnippets(params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({
+                type: FETCH_SNIPPETS,
+                payload: res.data
+            });
+        }
+    })
 };
 
 

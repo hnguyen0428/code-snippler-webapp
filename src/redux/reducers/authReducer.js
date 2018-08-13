@@ -3,7 +3,8 @@ import Snippler from '../../api/SnipplerClient';
 
 
 const initialState = {
-    currentUser: null
+    currentUser: null,
+    loggedIn: false
 };
 
 
@@ -19,7 +20,8 @@ export default function(state = initialState, action) {
 
             return {
                 ...state,
-                currentUser: action.payload
+                currentUser: action.payload,
+                loggedIn: true
             };
         }
         default:

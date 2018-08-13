@@ -38,6 +38,10 @@ const ENDPOINTS = {
         value: '/api/snippet/{snippetId}/comments',
         method: 'get'
     },
+    searchSnippets: {
+        value: '/api/snippet/search',
+        method: 'get'
+    },
     getPopular: {
         value: '/api/snippet/popular',
         method: 'get'
@@ -176,6 +180,19 @@ export default class Snippet extends SnipplerService {
         let config = {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.getComments.value, {snippetId: snippetId}),
             method: ENDPOINTS.getComments.method,
+            params: params
+        };
+
+        this.request(config, function(response, error) {
+            SnipplerService.handleRequestResult(response, error, callback);
+        });
+    }
+
+
+    searchSnippets(params, callback) {
+        let config = {
+            url: this.formFullUrl(this.baseUrl, ENDPOINTS.searchSnippets.value),
+            method: ENDPOINTS.searchSnippets.method,
             params: params
         };
 
