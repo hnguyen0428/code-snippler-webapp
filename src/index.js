@@ -15,13 +15,19 @@ if (apiKey) {
     const userData = localStorage.getItem(apiKey);
     if (userData) {
         let user = JSON.parse(userData);
+        // Inject api key into user object
+        user.apiKey = apiKey;
         store.dispatch({type: LOGIN, payload: user});
     }
     else {
         Snippler.user().getMe(null, (res, error) => {
             let success = handleActionsResult(res, error, null, null);
-            if (success)
-                store.dispatch({type: LOGIN, payload: res.data});
+
+            if (success) {
+                let user = res.data;
+                user.apiKey = apiKey;
+                store.dispatch({type: LOGIN, payload: user});
+            }
         });
     }
 }

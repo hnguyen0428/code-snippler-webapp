@@ -48,10 +48,6 @@ class App extends Component {
                         <Input type='text' label='Name' name='name' maxLength={16} value={this.state.text} onChange={this.updateText} />
                     </div>
 
-                    <div style={{width: '500px', marginLeft: '50%', transform: 'translateX(-50%)'}}>
-                        <DatePicker label='Birthdate' sundayFirstDayOfWeek/>
-                    </div>
-
                 </div>
             </ThemeProvider>
         );

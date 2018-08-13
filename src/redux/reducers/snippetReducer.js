@@ -13,7 +13,7 @@ export default function(state = initialState, action) {
     switch (action.type) {
         case CREATE_SNIPPET:
         case FETCH_SNIPPET:
-        case UPDATE_SNIPPET:
+        case UPDATE_SNIPPET: {
             let snippet = action.payload;
             // If this snippet was in the state before, then merge the two objects with
             // the payload as the priority
@@ -27,7 +27,8 @@ export default function(state = initialState, action) {
                     [snippet.snippetId]: snippet
                 }
             };
-        case DELETE_SNIPPET:
+        }
+        case DELETE_SNIPPET: {
             let snippetId = action.payload;
             // Delete from state the snippet that was deleted
             let byIds = state.byIds;
@@ -38,7 +39,8 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
-        case UPVOTE_SNIPPET:
+        }
+        case UPVOTE_SNIPPET: {
             // Data contains {snippetId: <id>, upvoted: <true/false>}
             let data = action.payload;
             let byIds = state.byIds;
@@ -49,7 +51,8 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
-        case DOWNVOTE_SNIPPET:
+        }
+        case DOWNVOTE_SNIPPET: {
             // Data contains {snippetId: <id>, downvoted: <true/false>}
             let data = action.payload;
             let byIds = state.byIds;
@@ -60,7 +63,8 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
-        case SAVE_SNIPPET:
+        }
+        case SAVE_SNIPPET: {
             // Data contains {snippetId: <id>, saved: <true/false>}
             let data = action.payload;
             let byIds = state.byIds;
@@ -71,6 +75,7 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
+        }
         case FETCH_POPULAR:
         case FETCH_MOST_UPVOTES:
         case FETCH_MOST_VIEWS:
@@ -79,12 +84,12 @@ export default function(state = initialState, action) {
         case FETCH_USER_CREATED_SNIPPETS:
         case FETCH_MY_SAVED_SNIPPETS:
         case FETCH_MY_CREATED_SNIPPETS:
-        case FETCH_SNIPPETS:
+        case FETCH_SNIPPETS: {
             let byIds = state.byIds;
             let snippets = action.payload;
             snippets.forEach(snippet => {
                 if (byIds[snippet.snippetId])
-                    byIds[snippet.snippetId] = {...byIds[snippet.snippetId], ... snippet};
+                    byIds[snippet.snippetId] = {...byIds[snippet.snippetId], ...snippet};
                 else
                     byIds[snippet.snippetId] = snippet;
             });
@@ -92,6 +97,7 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
+        }
         default:
             return state;
     }

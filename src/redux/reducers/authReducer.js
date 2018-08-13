@@ -10,7 +10,7 @@ const initialState = {
 export default function(state = initialState, action) {
     switch (action.type) {
         case LOGIN:
-        case REGISTER:
+        case REGISTER: {
             // Save apiKey and the user data to persist user
             localStorage.setItem('apiKey', action.payload.apiKey);
             localStorage.setItem(action.payload.apiKey, action.payload);
@@ -21,6 +21,7 @@ export default function(state = initialState, action) {
                 ...state,
                 currentUser: action.payload
             };
+        }
         default:
             return state;
     }

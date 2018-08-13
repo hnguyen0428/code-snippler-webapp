@@ -10,7 +10,7 @@ const initialState = {
 export default function(state = initialState, action) {
     switch (action.type) {
         case CREATE_COMMENT:
-        case UPDATE_COMMENT:
+        case UPDATE_COMMENT: {
             let comment = action.payload;
             let byIds = state.byIds;
 
@@ -25,7 +25,8 @@ export default function(state = initialState, action) {
                     [comment.commentId]: comment
                 }
             };
-        case FETCH_COMMENTS:
+        }
+        case FETCH_COMMENTS: {
             let byIds = state.byIds;
             let comments = action.payload;
             comments.forEach(comment => {
@@ -38,7 +39,8 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
-        case DELETE_COMMENT:
+        }
+        case DELETE_COMMENT: {
             let commentId = action.payload;
             // Delete from state the snippet that was deleted
             let byIds = state.byIds;
@@ -49,7 +51,8 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
-        case UPVOTE_COMMENT:
+        }
+        case UPVOTE_COMMENT: {
             // Data contains {commentId: <id>, upvoted: <true/false>}
             let data = action.payload;
             let byIds = state.byIds;
@@ -60,7 +63,8 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
-        case DOWNVOTE_COMMENT:
+        }
+        case DOWNVOTE_COMMENT: {
             // Data contains {commentId: <id>, downvoted: <true/false>}
             let data = action.payload;
             let byIds = state.byIds;
@@ -71,6 +75,7 @@ export default function(state = initialState, action) {
                 ...state,
                 byIds: byIds
             };
+        }
         default:
             return state;
     }

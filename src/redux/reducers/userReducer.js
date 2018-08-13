@@ -9,7 +9,7 @@ const initialState = {
 export default function(state = initialState, action) {
     switch (action.type) {
         case FETCH_USER:
-        case FETCH_ME:
+        case FETCH_ME: {
             return {
                 ...state,
                 byIds: {
@@ -17,6 +17,7 @@ export default function(state = initialState, action) {
                     [action.payload.userId]: action.payload
                 }
             };
+        }
         default:
             return state;
     }
