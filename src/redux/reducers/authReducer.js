@@ -1,4 +1,5 @@
 import {LOGIN, REGISTER} from '../actions/types';
+import Snippler from '../../api/SnipplerClient';
 
 
 const initialState = {
@@ -13,6 +14,8 @@ export default function(state = initialState, action) {
             // Save apiKey and the user data to persist user
             localStorage.setItem('apiKey', action.payload.apiKey);
             localStorage.setItem(action.payload.apiKey, action.payload);
+
+            Snippler.setApiKey(action.payload.apiKey);
 
             return {
                 ...state,
