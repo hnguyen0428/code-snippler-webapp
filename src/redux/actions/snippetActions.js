@@ -32,7 +32,7 @@ export const updateSnippet = (snippetId, params, callback, noResCB) => dispatch 
 
 
 export const fetchSnippet = (snippetId, params, callback, noResCB) => dispatch => {
-    Snippler.snippet().getSnippet(params, (res, error) => {
+    Snippler.snippet().getSnippet(snippetId, params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {
             dispatch({
@@ -104,7 +104,7 @@ export const saveSnippet = (snippetId, save, callback, noResCB) => dispatch => {
         if (success) {
             dispatch({
                 type: SAVE_SNIPPET,
-                payload: {snippetId: snippetId, saved: saved}
+                payload: {snippetId: snippetId, saved: save}
             });
         }
     });

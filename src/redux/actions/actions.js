@@ -3,7 +3,8 @@
 // This callback gives back the JSON, not the user data
 export const handleActionsResult = (data, error, callback, noResCB) => {
     if (data) {
-        callback(data, null);
+        if (callback)
+            callback(data, null);
         return true;
     }
     else if (error) {

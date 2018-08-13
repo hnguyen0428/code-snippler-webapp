@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
 import './assets/react-toolbox/theme.css';
@@ -11,8 +12,8 @@ import AceEditor from 'react-ace';
 import 'brace/mode/java';
 import 'brace/theme/github';
 
+import {fetchSnippet} from "./redux/actions/snippetActions";
 
-import {Provider} from 'react-redux';
 
 class App extends Component {
     constructor(props) {
@@ -26,7 +27,14 @@ class App extends Component {
         this.setState({text: text});
     };
 
+    componentWillMount() {
+        this.props.fetchSnippet('5b71c8d96a16c56b89c8403f', {showCommentDetails: true, showUserDetails: true});
+    }
+
     render() {
+        let snippet = this.props.snippets.byIds['5b71c8d96a16c56b89c8403f'];
+        let code = snippet ? snippet.code : '';
+
         return (
             <ThemeProvider theme={theme}>
                 <div className="App">
@@ -38,10 +46,12 @@ class App extends Component {
                     <Button raised primary>Test Button</Button>
                     <Input type='text' label='Name' name='name' maxLength={16} />
                     <AceEditor
-                        mode="java"
+                        mode="javascript"
                         theme="github"
                         name="UNIQUE_ID_OF_DIV"
                         editorProps={{$blockScrolling: true}}
+                        value={code}
+                        style={{width: '100%'}}
                     />
                     <button>React Button</button>
                     <div style={{width: '500px', marginLeft: '50%', transform: 'translateX(-50%)'}}>
@@ -54,4 +64,12 @@ class App extends Component {
     }
 }
 
-export default App;
+
+function mapStateToProps(state) {
+    return {
+        snippets: state.snippets
+    }
+}
+
+
+export default connect(mapStateToProps, {fetchSnippet})(App);

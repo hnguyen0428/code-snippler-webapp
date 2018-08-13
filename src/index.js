@@ -7,6 +7,7 @@ import store from './redux/store';
 import {LOGIN} from './redux/actions/types';
 import Snippler from './api/SnipplerClient';
 import {handleActionsResult} from './redux/actions/actions';
+import {Provider} from 'react-redux';
 
 
 // Persisting user
@@ -33,5 +34,9 @@ if (apiKey) {
 }
 
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render((
+    <Provider store={store}>
+        <App />
+    </Provider>
+    ), document.getElementById('root'));
 registerServiceWorker();
