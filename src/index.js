@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './root/App';
 import registerServiceWorker from './registerServiceWorker';
 import store from './redux/store';
 import {LOGIN} from './redux/actions/types';
 import Snippler from './api/SnipplerClient';
 import {handleActionsResult} from './redux/actions/actions';
 import {Provider} from 'react-redux';
+import './assets/react-toolbox/theme.css';
+import theme from './assets/react-toolbox/theme';
+import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
 
 
 // Persisting user
@@ -36,7 +39,9 @@ if (apiKey) {
 
 ReactDOM.render((
     <Provider store={store}>
-        <App />
+        <ThemeProvider theme={theme}>
+            <App />
+        </ThemeProvider>
     </Provider>
     ), document.getElementById('root'));
 registerServiceWorker();

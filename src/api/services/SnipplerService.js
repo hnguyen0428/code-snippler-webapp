@@ -46,7 +46,6 @@ export default class SnipplerService {
 
     static handleRequestResult(response, error, callback) {
         if (response) {
-            console.log(response);
             if (callback)
                 callback(response.data, null);
         }
