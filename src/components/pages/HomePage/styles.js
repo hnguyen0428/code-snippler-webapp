@@ -4,6 +4,6 @@ export const styles = {
         justifyContent: 'center'
     },
     snippetsCtn: {
-        width: '800px'
+        width: '1000px'
     }
 };

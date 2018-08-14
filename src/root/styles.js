@@ -1,6 +1,6 @@
 export const styles = {
     app: {
-        fontFamily: 'Roboto',
+        fontFamily: 'Monaco',
         fontSize: '25px',
         backgroundColor: '#F9F9F9',
         height: '100%',
