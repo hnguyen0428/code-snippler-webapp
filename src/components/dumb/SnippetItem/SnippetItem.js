@@ -48,7 +48,7 @@ class SnippetItem extends Component {
 
 
                 <div style={styles.rightCtn}>
-                    <IconButton style={styles.viewIcon} src={viewIcon} text={snippet.downvotes}/>
+                    <IconButton style={styles.viewIcon} src={viewIcon} text={snippet.viewsCount}/>
                 </div>
             </ListItem>
         );
