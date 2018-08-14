@@ -34,6 +34,10 @@ class SnippetItem extends Component {
         return (
             <ListItem style={rootCtn}>
                 <div style={styles.leftCtn}>
+                    <Button style={styles.language}>{snippet.languageName}</Button>
+                </div>
+
+                <div style={styles.middleCtn}>
                     <h3 style={styles.title}>{snippet.title}</h3>
                     <div style={styles.iconsCtn}>
                         <IconButton style={styles.iconCtn} src={bHeartIcon} text={snippet.savedCount}/>

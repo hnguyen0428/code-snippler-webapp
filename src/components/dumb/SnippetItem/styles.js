@@ -2,9 +2,13 @@ export const styles = {
     rootCtn: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-evenly'
     },
     leftCtn: {
-        flexGrow: '1',
+        flex: '1'
+    },
+    middleCtn: {
+        flex: '5'
     },
     rightCtn: {
         width: '30px',
@@ -17,15 +21,20 @@ export const styles = {
         fontFamily: 'inherit',
         fontSize: '15px'
     },
+    language: {
+        fontFamily: 'inherit',
+        fontSize: '12px'
+    },
     iconsCtn: {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
+        height: '20px'
     },
     iconCtn: {
         display: 'flex',
         flexDirection: 'row',
-        height: '20px',
+        height: 'inherit',
         width: '40px',
         fontSize: '20px',
         marginLeft: '8px',
