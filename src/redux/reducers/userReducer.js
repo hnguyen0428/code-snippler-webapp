@@ -1,4 +1,4 @@
-import {FETCH_ME, FETCH_USER} from '../actions/types';
+import {FETCH_ME, FETCH_USER, FETCH_USERS} from '../actions/types';
 
 
 const initialState = {
@@ -17,6 +17,13 @@ export default function(state = initialState, action) {
                     [action.payload.userId]: action.payload
                 }
             };
+        }
+        case FETCH_USERS: {
+            let users = action.payload.data;
+            users.forEach(user => {
+                state.byIds[user.userId] = user;
+            });
+            return state;
         }
         default:
             return state;

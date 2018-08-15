@@ -2,7 +2,7 @@ import Snippler from '../../api/SnipplerClient';
 import {
     CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
     SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES,
-    FETCH_COMMENTS, FETCH_USER, CREATE_COMMENT, FETCH_SNIPPETS
+    FETCH_COMMENTS, FETCH_USER, CREATE_COMMENT, FETCH_SNIPPETS, FETCH_USERS
 } from '../actions/types';
 import {handleActionsResult} from './actions';
 
@@ -54,6 +54,31 @@ export const fetchSnippet = (snippetId, params, callback, noResCB) => dispatch =
                 dispatch({
                     type: FETCH_USER,
                     payload: user
+                });
+            }
+        }
+    });
+};
+
+
+export const fetchSnippetsByIds = (snippetIds, params, callback, noResCB) => dispatch => {
+    Snippler.snippet().getSnippets(snippetIds, params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({
+                type: FETCH_SNIPPETS,
+                payload: res.data
+            });
+
+            if (params && params.showUserDetails) {
+                let users = [];
+                res.data.forEach(snippet => {
+                    users.push(snippet.user);
+                });
+
+                dispatch({
+                    type: FETCH_USERS,
+                    payload: users
                 });
             }
         }
@@ -122,7 +147,7 @@ export const createComment = (snippetId, params, callback, noResCB) => dispatch 
                 payload: res.data
             });
         }
-    })
+    });
 };
 
 
@@ -134,8 +159,20 @@ export const fetchComments = (snippetId, params, callback, noResCB) => dispatch 
                 type: FETCH_COMMENTS,
                 payload: res.data
             });
+
+            if (params && params.showUserDetails) {
+                let users = [];
+                res.data.forEach(comment => {
+                    users.push(comment.user);
+                });
+
+                dispatch({
+                    type: FETCH_USERS,
+                    payload: users
+                });
+            }
         }
-    })
+    });
 };
 
 
@@ -148,7 +185,7 @@ export const searchSnippets = (params, callback, noResCB) => dispatch => {
                 payload: res.data
             });
         }
-    })
+    });
 };
 
 

@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button';
 import AceEditor from 'react-ace';
 import 'brace/mode/java';
 import 'brace/theme/github';
-import {BrowserRouter as Router, Route, Link, Switch, Redirect} from 'react-router-dom';
+import {Router, Route, Link, Switch, Redirect} from 'react-router-dom';
+import history from './history'
 
 import {fetchSnippet} from "../redux/actions/snippetActions";
 
@@ -39,12 +40,12 @@ class App extends Component {
                     </div>
                 </AppBar>
                 <div style={{height: '45px'}}/>
-                <Router>
+                <Router history={history}>
                     <Switch>
                         <Route exact path="/" component={HomePage}/>
-                        <Route path="/snippet" component={CreateSnippetPage}/>
-                        <Route path="/login" component={LoginPage}/>
-                        <Route path="/snippet/:snippetId" component={SnippetDetailsPage}/>
+                        <Route exact path="/snippet" component={CreateSnippetPage}/>
+                        <Route exact path="/login" component={LoginPage}/>
+                        <Route exact path="/snippet/:snippetId" component={SnippetDetailsPage}/>
                     </Switch>
                 </Router>
             </div>

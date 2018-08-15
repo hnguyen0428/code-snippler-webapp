@@ -1,6 +1,31 @@
 import Snippler from '../../api/SnipplerClient';
-import {UPDATE_COMMENT, DELETE_COMMENT, UPVOTE_COMMENT, DOWNVOTE_COMMENT} from './types';
+import {UPDATE_COMMENT, DELETE_COMMENT, UPVOTE_COMMENT, DOWNVOTE_COMMENT, FETCH_COMMENTS, FETCH_USERS} from './types';
 import {handleActionsResult} from './actions';
+
+
+export const fetchCommentsByIds = (commentIds, params, callback, noResCB) => dispatch => {
+    Snippler.comment().getComments(commentIds, params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({
+                type: FETCH_COMMENTS,
+                payload: res.data
+            });
+
+            if (params && params.showUserDetails) {
+                let users = [];
+                res.data.forEach(comment => {
+                    users.push(comment.user);
+                });
+
+                dispatch({
+                    type: FETCH_USERS,
+                    payload: users
+                });
+            }
+        }
+    })
+};
 
 
 export const updateComment = (commentId, params, callback, noResCB) => dispatch => {

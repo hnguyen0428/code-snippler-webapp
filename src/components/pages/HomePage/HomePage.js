@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import {fetchPopularSnippets} from "../../../redux/actions/snippetActions";
 import SnippetsList from '../../dumb/SnippetsList/SnippetsList';
@@ -17,7 +18,7 @@ class HomePage extends Component {
     }
 
     componentWillMount() {
-        this.props.fetchPopularSnippets(null, (res, error) => {
+        this.props.fetchPopularSnippets(null, (res, err) => {
             if (res) {
                 let snippets = res.data;
                 let snippetIds = [];
@@ -54,4 +55,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {fetchPopularSnippets})(HomePage);
+export default withRouter(connect(mapStateToProps, {fetchPopularSnippets})(HomePage));

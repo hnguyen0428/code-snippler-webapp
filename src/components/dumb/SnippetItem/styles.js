@@ -2,13 +2,13 @@ export const styles = {
     rootCtn: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
     },
     leftCtn: {
         flex: '1'
     },
     middleCtn: {
-        flex: '5'
+        flex: '5',
     },
     rightCtn: {
         width: '30px',
@@ -19,7 +19,8 @@ export const styles = {
     },
     title: {
         fontFamily: 'inherit',
-        fontSize: '15px'
+        fontSize: '15px',
+        cursor: 'pointer'
     },
     language: {
         fontFamily: 'inherit',

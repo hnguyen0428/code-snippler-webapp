@@ -2,6 +2,10 @@ import SnipplerService from "./SnipplerService";
 
 
 const ENDPOINTS = {
+    getComments: {
+        value: '/api/comment/byIds',
+        method: 'get'
+    },
     updateComment: {
         value: '/api/comment/{commentId}',
         method: 'patch'
@@ -24,6 +28,21 @@ const ENDPOINTS = {
 export default class Comment extends SnipplerService {
     constructor(config) {
         super(config);
+    }
+
+
+    getComments(commentIds, params, callback) {
+        params = {...commentIds, ...params};
+
+        let config = {
+            url: this.formFullUrl(this.baseUrl, ENDPOINTS.getComments.value),
+            method: ENDPOINTS.getComments.method,
+            params: params
+        };
+
+        this.request(config, function(response, error) {
+            SnipplerService.handleRequestResult(response, error, callback);
+        });
     }
 
 

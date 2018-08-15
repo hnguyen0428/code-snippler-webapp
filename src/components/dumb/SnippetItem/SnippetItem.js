@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
+import history from '../../../root/history';
 
 import IconButton from '../IconButton/IconButton';
 
@@ -17,9 +18,17 @@ const thumbsUp = require('../../../assets/icons/thumbs_up.png');
 
 
 class SnippetItem extends Component {
-    click() {
-        console.log('yes');
-    }
+    onClickSnippet = () => {
+        let snippetId = this.props.snippet.snippetId;
+        history.push({
+            pathname: `/snippet/${snippetId}`,
+            state: {
+                params: {
+                    increaseViewcount: true
+                }
+            }
+        });
+    };
 
 
     render() {
@@ -38,7 +47,9 @@ class SnippetItem extends Component {
                 </div>
 
                 <div style={styles.middleCtn}>
-                    <h3 style={styles.title}>{snippet.title}</h3>
+                    <div onClick={this.onClickSnippet}>
+                        <h3 style={styles.title}>{snippet.title}</h3>
+                    </div>
                     <div style={styles.iconsCtn}>
                         <IconButton style={styles.iconCtn} src={bHeartIcon} text={snippet.savedCount}/>
                         <IconButton style={styles.iconCtn} src={thumbsUp} text={snippet.upvotes}/>

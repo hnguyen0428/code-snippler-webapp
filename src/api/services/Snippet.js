@@ -18,6 +18,10 @@ const ENDPOINTS = {
         value: '/api/snippet/{snippetId}',
         method: 'get'
     },
+    getSnippets: {
+        value: '/api/snippet/byIds',
+        method: 'get'
+    },
     upvoteSnippet: {
         value: '/api/snippet/{snippetId}/upvote',
         method: 'patch'
@@ -84,6 +88,21 @@ export default class Snippet extends SnipplerService {
         let config = {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.getSnippet.value, {snippetId: snippetId}),
             method: ENDPOINTS.getSnippet.method,
+            params: params
+        };
+
+        this.request(config, function(response, error) {
+            SnipplerService.handleRequestResult(response, error, callback);
+        });
+    }
+
+
+    getSnippets(snippetIds, params, callback) {
+        params = {...snippetIds, ...params};
+
+        let config = {
+            url: this.formFullUrl(this.baseUrl, ENDPOINTS.getSnippets.value),
+            method: ENDPOINTS.getSnippets.method,
             params: params
         };
 

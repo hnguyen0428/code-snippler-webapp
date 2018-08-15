@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import {routerReducer} from 'react-router-redux';
 import authReducer from './authReducer';
 import userReducer from './userReducer';
 import snippetReducer from './snippetReducer';
@@ -11,5 +12,6 @@ export default combineReducers({
     users: userReducer,
     snippets: snippetReducer,
     comments: commentReducer,
-    languages: languageReducer
+    languages: languageReducer,
+    routing: routerReducer
 });
