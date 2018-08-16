@@ -36,7 +36,7 @@ class SnippetDetailsPage extends Component {
             showUserDetails: true
         };
 
-        if (this.props.location.state && this.props.location.state.params && performance.navigation.type != PerformanceNavigation.TYPE_RELOAD)
+        if (this.props.location.state && this.props.location.state.params)
             params = {...params, ...this.props.location.state.params};
 
         this.props.fetchSnippet(this.props.match.params.snippetId, params);
