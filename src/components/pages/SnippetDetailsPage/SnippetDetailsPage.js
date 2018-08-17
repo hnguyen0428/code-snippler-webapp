@@ -59,6 +59,9 @@ class SnippetDetailsPage extends Component {
                 <div style={styles.rootCtn}>
                     <div style={styles.contentCtn}>
                         <h3 style={styles.header}>Created by: {username} on {date}</h3>
+                        <h3 style={styles.header}>{snippet.title}</h3>
+                        <hr/>
+                        <p style={styles.description}>{snippet.description}</p>
                         <AceEditor
                             mode={languagesMap[snippet.languageName.toLowerCase()]}
                             theme="github"

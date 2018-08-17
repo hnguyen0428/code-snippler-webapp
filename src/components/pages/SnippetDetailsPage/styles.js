@@ -16,6 +16,10 @@ export const styles = {
         fontSize: '20px',
         fontFamily: 'Lucida Grande, Sans Serif'
     },
+    description: {
+        fontSize: '15px',
+        fontFamily: 'Lucida Grande, Sans Serif'
+    },
     editor: {
         height: '600px',
         width: 'inherit'
