@@ -14,7 +14,7 @@ export default function(state = initialState, action) {
         case REGISTER: {
             // Save apiKey and the user data to persist user
             localStorage.setItem('apiKey', action.payload.apiKey);
-            localStorage.setItem(action.payload.apiKey, action.payload);
+            localStorage.setItem(action.payload.apiKey, JSON.stringify(action.payload));
 
             Snippler.setApiKey(action.payload.apiKey);
 

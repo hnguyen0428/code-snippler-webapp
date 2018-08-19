@@ -1,10 +1,11 @@
 export const styles = {
     app: {
-        fontFamily: 'Monaco',
+        fontFamily: 'Lucida Grande',
         fontSize: '25px',
         backgroundColor: '#F9F9F9',
         height: '100%',
-        width: '100%'
+        width: '100%',
+        color: '#213838'
     },
     navBar: {
         backgroundColor: '#E69F51',
@@ -29,5 +30,5 @@ export const styles = {
     loginButton: {
         fontFamily: 'inherit',
         fontSize: '20px'
-    }
+    },
 };

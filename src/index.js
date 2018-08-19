@@ -15,10 +15,12 @@ import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
 
 // Persisting user
 const apiKey = localStorage.getItem('apiKey');
+
 if (apiKey) {
     const userData = localStorage.getItem(apiKey);
     if (userData) {
         let user = JSON.parse(userData);
+
         // Inject api key into user object
         user.apiKey = apiKey;
         store.dispatch({type: LOGIN, payload: user});
