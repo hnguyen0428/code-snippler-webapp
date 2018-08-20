@@ -24,30 +24,46 @@ export const styles = {
     },
     language: {
         fontFamily: 'inherit',
-        fontSize: '12px'
+        fontSize: '12px',
+        marginRight: '10px',
+    },
+    arrowBack: {
+
+    },
+    arrowForward: {
+        marginLeft: '3px'
+    },
+    titleCtn: {
+        backgroundColor: 'transparent'
     },
     iconsCtn: {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
-        height: '20px'
+        height: '20px',
+        justifyContent: 'flex-start',
     },
     iconCtn: {
-        display: 'flex',
-        flexDirection: 'row',
-        height: 'inherit',
-        width: '40px',
-        fontSize: '20px',
-        marginLeft: '8px',
-        marginRight: '8px'
+        fontSize: '18px',
+        marginLeft: '3px',
+        marginRight: '3px',
+    },
+    iconBtn: {
+        marginLeft: '12px',
+        marginRight: '12px',
+        width: 'auto',
+        height: '30px',
+    },
+    icon: {
+        width: '23px',
+        height: '23px',
+        marginRight: '3px',
     },
     viewIcon: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '30px',
-        width: '30px',
-        fontSize: '20px',
-        marginLeft: '8px',
-        marginRight: '8px'
+        color: '#727272',
+        marginRight: '3px',
+    },
+    viewText: {
+        color: '#727272'
     }
 };

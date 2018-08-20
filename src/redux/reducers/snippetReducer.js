@@ -45,7 +45,11 @@ export default function(state = initialState, action) {
             let data = action.payload;
             let byIds = state.byIds;
             if (byIds[data.snippetId]) {
-                byIds[data.snippetId].upvoted = data.upvoted
+                if (byIds[data.snippetId].upvoted !== data.upvoted) {
+                    byIds[data.snippetId].upvoted = data.upvoted;
+                    byIds[data.snippetId].upvotes = data.upvoted ? byIds[data.snippetId].upvotes + 1 :
+                        byIds[data.snippetId].upvotes - 1;
+                }
             }
             return {
                 ...state,
@@ -57,7 +61,11 @@ export default function(state = initialState, action) {
             let data = action.payload;
             let byIds = state.byIds;
             if (byIds[data.snippetId]) {
-                byIds[data.snippetId].downvoted = data.downvoted
+                if (byIds[data.snippetId].downvoted !== data.downvoted) {
+                    byIds[data.snippetId].downvoted = data.downvoted;
+                    byIds[data.snippetId].downvotes = data.downvoted ? byIds[data.snippetId].downvotes + 1 :
+                        byIds[data.snippetId].downvotes - 1;
+                }
             }
             return {
                 ...state,
@@ -69,7 +77,11 @@ export default function(state = initialState, action) {
             let data = action.payload;
             let byIds = state.byIds;
             if (byIds[data.snippetId]) {
-                byIds[data.snippetId].saved = data.saved
+                if (byIds[data.snippetId].saved !== data.saved) {
+                    byIds[data.snippetId].saved = data.saved;
+                    byIds[data.snippetId].savedCount = data.saved ? byIds[data.snippetId].savedCount + 1 :
+                        byIds[data.snippetId].savedCount - 1;
+                }
             }
             return {
                 ...state,

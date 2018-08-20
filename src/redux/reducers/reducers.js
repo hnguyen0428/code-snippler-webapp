@@ -5,6 +5,7 @@ import userReducer from './userReducer';
 import snippetReducer from './snippetReducer';
 import commentReducer from './commentReducer';
 import languageReducer from './languageReducer';
+import alertReducer from './alertReducer';
 
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
     snippets: snippetReducer,
     comments: commentReducer,
     languages: languageReducer,
-    routing: routerReducer
+    routing: routerReducer,
+    alert: alertReducer
 });

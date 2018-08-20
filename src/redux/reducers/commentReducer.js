@@ -57,7 +57,11 @@ export default function(state = initialState, action) {
             let data = action.payload;
             let byIds = state.byIds;
             if (byIds[data.commentId]) {
-                byIds[data.commentId].upvoted = data.upvoted
+                if (byIds[data.commentId].upvoted !== data.upvoted) {
+                    byIds[data.commentId].upvoted = data.upvoted;
+                    byIds[data.commentId].upvotes = data.upvoted ? byIds[data.commentId].upvotes + 1 :
+                        byIds[data.commentId].upvotes - 1;
+                }
             }
             return {
                 ...state,
@@ -69,7 +73,11 @@ export default function(state = initialState, action) {
             let data = action.payload;
             let byIds = state.byIds;
             if (byIds[data.commentId]) {
-                byIds[data.commentId].downvoted = data.downvoted
+                if (byIds[data.commentId].downvoted !== data.downvoted) {
+                    byIds[data.commentId].downvoted = data.downvoted;
+                    byIds[data.commentId].downvotes = data.downvoted ? byIds[data.commentId].downvotes + 1 :
+                        byIds[data.commentId].downvotes - 1;
+                }
             }
             return {
                 ...state,

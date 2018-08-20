@@ -5,11 +5,18 @@ export const styles = {
         backgroundColor: '#F9F9F9',
         height: '100%',
         width: '100%',
-        color: '#213838'
+        color: '#213838',
+        position: 'absolute'
     },
     navBar: {
-        backgroundColor: '#E69F51',
+        backgroundColor: '#313133',
         height: '45px',
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    navItemsCtn: {
+        width: '1000px',
+        display: 'flex',
         flexDirection: 'row'
     },
     navBarButtonsCtn: {
@@ -18,9 +25,14 @@ export const styles = {
         flexGrow: '1'
     },
     navBarTitle: {
-        fontFamily: 'Oleo Script',
+        fontFamily: 'Courier New Lucida Console',
         fontSize: '20px',
         fontWeight: '600',
+        color: '#E1E1E1'
+    },
+    codeIcon: {
+        marginRight: '5px',
+        marginLeft: '5px'
     },
     loginButtonCtn: {
         display: 'flex',
@@ -29,6 +41,12 @@ export const styles = {
     },
     loginButton: {
         fontFamily: 'inherit',
-        fontSize: '20px'
+        fontSize: '18px'
     },
+    iconColor: {
+        color: '#E1E1E1'
+    },
+    usernameMenuItem: {
+        backgroundColor: '#F9F9F9'
+    }
 };

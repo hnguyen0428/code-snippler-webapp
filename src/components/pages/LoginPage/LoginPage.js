@@ -17,6 +17,7 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 import {styles} from './styles';
 
 import {login, register} from '../../../redux/actions/authActions';
+import {showAlert, closeAlert} from '../../../redux/actions/alertActions';
 
 
 class LoginPage extends Component {
@@ -64,35 +65,44 @@ class LoginPage extends Component {
     }
 
 
-    submitRegister() {
-        let passed = this.registerInputSanityCheck();
+    componentWillMount() {
+        if (this.props.auth.loggedIn)
+            history.push('/');
+    }
 
-        if (!passed) {
-            this.setState({errorDialogOpen: true});
+
+    submitRegister() {
+        let errors = this.registerInputSanityCheck();
+
+        if (errors.length !== 0) {
+            this.props.showAlert('Error', errors.join('\n'));
         }
         else {
             this.props.register(this.state.registerUsername, this.state.registerPassword,
                 (res, err) => {
                     if (res) {
-                        this.setState({welcomeDialogOpen: true});
+                        this.props.showAlert('Welcome', 'We will redirect you to the homepage in a bit...');
                         setInterval(() => {
+                            this.props.closeAlert();
                             history.push('/');
+                            window.location.reload();
                         }, 2000);
                     }
-                    else if (err) {
-                        let errors = [err.error.message];
-                        this.setState({errorMessages: errors, errorDialogOpen: true});
-                    }
-                }, (err) => {
-                    let errors = ['Unable to get a response from the server'];
-                    this.setState({errorMessages: errors, errorDialogOpen: true});
                 });
         }
     }
 
 
     submitLogin() {
+        this.props.login(this.state.loginUsername, this.state.loginPassword,
+            (res, err) => {
+                if (res) {
+                    history.push('/');
 
+                    // Reload to fetch information about feed
+                    window.location.reload();
+                }
+            });
     }
 
 
@@ -124,12 +134,7 @@ class LoginPage extends Component {
         if (errors.length === 0 && this.state.registerPassword !== this.state.registerConfirmPassword)
             errors.push('Confirmation password does not match password');
 
-
-        this.setState({
-            errorMessages: errors
-        });
-
-        return errors.length === 0;
+        return errors;
     }
 
 
@@ -143,16 +148,6 @@ class LoginPage extends Component {
     render() {
         return (
             <div style={styles.rootCtn}>
-                <Dialog open={this.state.welcomeDialogOpen}>
-                    <p style={styles.welcomeDialogText}>Welcome</p>
-                </Dialog>
-
-                <Dialog open={this.state.errorDialogOpen} onBackdropClick={this.closeErrorDialog}
-                        onEscapeKeyDown={this.closeErrorDialog}
-                >
-                    <p style={styles.errorDialogText}>{this.state.errorMessages.join("\n")}</p>
-                </Dialog>
-
                 <Dialog
                     open={this.state.dialogOpen} onBackdropClick={this.closeRegisterDialog}
                     onEscapeKeyDown={this.closeRegisterDialog}
@@ -247,7 +242,15 @@ class LoginPage extends Component {
                             />
                         </div>
                         <div style={styles.buttonCtn}>
-                            <Button color="primary" variant="raised" onClick={this.submitLogin}>Login</Button>
+                            <Button
+                                color="primary"
+                                variant="raised"
+                                onClick={this.submitLogin}
+                                disabled={this.state.loginUsername.length === 0 ||
+                                this.state.loginPassword.length === 0}
+                            >
+                                Login
+                            </Button>
                         </div>
 
                         <h3 style={styles.registerText}>Don't have an account? <a href="javascript:void(0)"
@@ -267,4 +270,9 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {login, register})(LoginPage);
+export default connect(mapStateToProps, {
+    login,
+    register,
+    showAlert,
+    closeAlert
+})(LoginPage);

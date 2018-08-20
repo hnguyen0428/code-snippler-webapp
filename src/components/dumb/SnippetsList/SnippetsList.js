@@ -20,7 +20,7 @@ class SnippetsList extends Component {
 
     renderSnippet(snippet) {
         return (
-            <SnippetItem style={styles.snippetItem} snippet={snippet}/>
+            <SnippetItem style={styles.snippetItem} snippetId={snippet.snippetId}/>
         );
     }
 

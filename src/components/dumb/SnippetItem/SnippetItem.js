@@ -3,23 +3,27 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import ListItem from '@material-ui/core/ListItem';
+import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
-import history from '../../../root/history';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
+import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
+import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
+import Star from '@material-ui/icons/Star';
+import Visibility from '@material-ui/icons/Visibility';
 
-import IconButton from '../IconButton/IconButton';
+import history from '../../../root/history';
 
 import {styles} from './styles';
 
-const bHeartIcon = require('../../../assets/icons/black_heart.png');
-const rHeartIcon = require('../../../assets/icons/red_heart.png');
-const viewIcon = require('../../../assets/icons/view_icon.png');
-const thumbsDown = require('../../../assets/icons/thumbs_down.png');
-const thumbsUp = require('../../../assets/icons/thumbs_up.png');
+import {upvoteSnippet, downvoteSnippet, saveSnippet} from '../../../redux/actions/snippetActions';
+import {showBinaryAlert, closeBinaryAlert} from '../../../redux/actions/alertActions';
 
 
 class SnippetItem extends Component {
     onClickSnippet = () => {
-        let snippetId = this.props.snippet.snippetId;
+        let snippetId = this.props.snippetId;
         history.push({
             pathname: `/snippet/${snippetId}`,
             state: {
@@ -31,8 +35,54 @@ class SnippetItem extends Component {
     };
 
 
+    redirectToLogin = () => {
+        history.push('/login');
+        this.props.closeBinaryAlert();
+    };
+
+
+    handleSaveSnippet = (event) => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+        if (!this.props.auth.loggedIn)
+            this.props.showBinaryAlert('Sign In?', 'To save the snippet, you must sign in', actionOne, actionTwo);
+
+        const snippetId = this.props.snippetId;
+        const saved = this.props.snippets.byIds[snippetId].saved;
+
+        if (saved !== undefined)
+            this.props.saveSnippet(snippetId, !saved);
+    };
+
+
+    handleUpvoteSnippet = (event) => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+        if (!this.props.auth.loggedIn)
+            this.props.showBinaryAlert('Sign In?', 'To upvote the snippet, you must sign in', actionOne, actionTwo);
+
+        const snippetId = this.props.snippetId;
+        const upvoted = this.props.snippets.byIds[snippetId].upvoted;
+        if (upvoted !== undefined)
+            this.props.upvoteSnippet(snippetId, !upvoted);
+    };
+
+
+    handleDownvoteSnippet = (event) => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+        if (!this.props.auth.loggedIn)
+            this.props.showBinaryAlert('Sign In?', 'To downvote the snippet, you must sign in', actionOne, actionTwo);
+
+        const snippetId = this.props.snippetId;
+        const downvoted = this.props.snippets.byIds[snippetId].downvoted;
+        if (downvoted !== undefined)
+            this.props.downvoteSnippet(snippetId, !downvoted);
+    };
+
+
     render() {
-        let snippet = this.props.snippet;
+        let snippet = this.props.snippets.byIds[this.props.snippetId];
 
         // Merge style
         let rootCtn = styles.rootCtn;
@@ -43,23 +93,56 @@ class SnippetItem extends Component {
         return (
             <ListItem style={rootCtn}>
                 <div style={styles.leftCtn}>
-                    <Button style={styles.language}>{snippet.languageName}</Button>
+                    <Button style={styles.language}>
+                        <ArrowBackIos style={styles.arrowBack}/>
+                        {snippet.languageName}
+                        <ArrowForwardIos style={styles.arrowForward}/>
+                    </Button>
                 </div>
 
                 <div style={styles.middleCtn}>
-                    <div onClick={this.onClickSnippet}>
+                    <div style={styles.titleCtn} onClick={this.onClickSnippet}>
                         <h3 style={styles.title}>{snippet.title}</h3>
                     </div>
                     <div style={styles.iconsCtn}>
-                        <IconButton style={styles.iconCtn} src={bHeartIcon} text={snippet.savedCount}/>
-                        <IconButton style={styles.iconCtn} src={thumbsUp} text={snippet.upvotes}/>
-                        <IconButton style={styles.iconCtn} src={thumbsDown} text={snippet.downvotes}/>
+                        <Tooltip disableFocusListener disableTouchListener title="Save">
+                            <IconButton
+                                style={snippet.saved ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
+                                onClick={this.handleSaveSnippet}
+                            >
+                                <Star style={styles.icon}/>
+                                {snippet.savedCount}
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip disableFocusListener disableTouchListener title="Upvote">
+                            <IconButton
+                                style={snippet.upvoted ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
+                                onClick={this.handleUpvoteSnippet}
+                            >
+                                <ThumbUpAlt style={styles.icon}/>
+                                {snippet.upvotes}
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip disableFocusListener disableTouchListener title="Downvote">
+                            <IconButton
+                                style={snippet.downvoted ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
+                                onClick={this.handleDownvoteSnippet}
+                            >
+                                <ThumbDownAlt style={styles.icon}/>
+                                {snippet.downvotes}
+                            </IconButton>
+                        </Tooltip>
                     </div>
                 </div>
 
 
                 <div style={styles.rightCtn}>
-                    <IconButton style={styles.viewIcon} src={viewIcon} text={snippet.viewsCount}/>
+                    <IconButton disabled>
+                        <Visibility style={styles.viewIcon}/>
+                        <p style={styles.viewText}>
+                            {snippet.viewsCount}
+                        </p>
+                    </IconButton>
                 </div>
             </ListItem>
         );
@@ -68,8 +151,21 @@ class SnippetItem extends Component {
 
 
 SnippetItem.propTypes = {
-    snippet: PropTypes.object.isRequired
+    snippetId: PropTypes.string.isRequired
 };
 
+function mapStateToProps(state) {
+    return {
+        auth: state.auth,
+        snippets: state.snippets
+    };
+}
 
-export default SnippetItem;
+
+export default connect(mapStateToProps, {
+    upvoteSnippet,
+    downvoteSnippet,
+    saveSnippet,
+    showBinaryAlert,
+    closeBinaryAlert
+})(SnippetItem);

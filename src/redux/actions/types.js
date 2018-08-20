@@ -1,5 +1,6 @@
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
+export const LOGGED_OUT = 'LOGGED_OUT';
 
 
 export const FETCH_ME = 'FETCH_ME';
@@ -36,3 +37,8 @@ export const DOWNVOTE_COMMENT = 'DOWNVOTE_COMMENT';
 
 
 export const FETCH_ALL_LANGUAGES = 'FETCH_ALL_LANGUAGES';
+
+export const ALERT_ACTIVE = 'ALERT_ACTIVE';
+export const ALERT_INACTIVE = 'ALERT_INACTIVE';
+export const BINARY_ALERT_ACTIVE = 'BINARY_ALERT_ACTIVE';
+export const BINARY_ALERT_INACTIVE = 'BINARY_ALERT_INACTIVE';
