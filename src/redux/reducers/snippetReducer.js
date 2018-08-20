@@ -49,6 +49,12 @@ export default function(state = initialState, action) {
                     byIds[data.snippetId].upvoted = data.upvoted;
                     byIds[data.snippetId].upvotes = data.upvoted ? byIds[data.snippetId].upvotes + 1 :
                         byIds[data.snippetId].upvotes - 1;
+
+                    // If it was downvoted before, then make it false
+                    if (byIds[data.snippetId].downvoted && data.upvoted) {
+                        byIds[data.snippetId].downvoted = false;
+                        byIds[data.snippetId].downvotes -= 1;
+                    }
                 }
             }
             return {
@@ -65,6 +71,12 @@ export default function(state = initialState, action) {
                     byIds[data.snippetId].downvoted = data.downvoted;
                     byIds[data.snippetId].downvotes = data.downvoted ? byIds[data.snippetId].downvotes + 1 :
                         byIds[data.snippetId].downvotes - 1;
+
+                    // If it was upvoted before, then make it false
+                    if (byIds[data.snippetId].upvoted && data.downvoted) {
+                        byIds[data.snippetId].upvoted = false;
+                        byIds[data.snippetId].upvotes -= 1;
+                    }
                 }
             }
             return {

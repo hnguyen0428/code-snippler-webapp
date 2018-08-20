@@ -22,6 +22,10 @@ const ENDPOINTS = {
         value: '/api/snippet/byIds',
         method: 'get'
     },
+    getSnippetsByLanguage: {
+        value: '/api/snippet/byLanguage',
+        method: 'get'
+    },
     upvoteSnippet: {
         value: '/api/snippet/{snippetId}/upvote',
         method: 'patch'
@@ -103,6 +107,21 @@ export default class Snippet extends SnipplerService {
         let config = {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.getSnippets.value),
             method: ENDPOINTS.getSnippets.method,
+            params: params
+        };
+
+        this.request(config, function(response, error) {
+            SnipplerService.handleRequestResult(response, error, callback);
+        });
+    }
+
+
+    getSnippetsByLanguage(language, params, callback) {
+        params = {language: language, ...params};
+
+        let config = {
+            url: this.formFullUrl(this.baseUrl, ENDPOINTS.getSnippetsByLanguage.value),
+            method: ENDPOINTS.getSnippetsByLanguage.method,
             params: params
         };
 

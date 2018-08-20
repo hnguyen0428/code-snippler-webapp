@@ -7,7 +7,8 @@ export const languagesMap = {
     "c++": "c_cpp",
     "ruby": "ruby",
     "javascript": "javascript",
-    "react": "javascript",
+    "reactjs": "jsx",
+    "reactnative": "jsx",
     "angular": "javascript",
     "swift": "swift",
     "c": "c_cpp"

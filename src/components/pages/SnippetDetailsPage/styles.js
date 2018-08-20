@@ -1,3 +1,6 @@
+import {theme} from '../../../constants/GlobalStyles';
+
+
 export const styles = {
     rootCtn: {
         marginTop: '20px',
@@ -6,7 +9,8 @@ export const styles = {
         justifyContent: 'center',
         position: 'absolute',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        backgroundColor: theme.backgroundColor
     },
     contentCtn: {
         height: '800px',

@@ -18,12 +18,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Add from '@material-ui/icons/Add';
-import Code from '@material-ui/icons/Code';
 
-import AceEditor from 'react-ace';
-import 'brace/mode/java';
-import 'brace/theme/github';
-import {Router, Route, Link, Switch, Redirect} from 'react-router-dom';
+
+import {Router, Route, Switch} from 'react-router-dom';
 import history from './history'
 
 import {logout} from "../redux/actions/authActions";

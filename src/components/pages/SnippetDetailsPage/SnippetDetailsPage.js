@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import AceEditor from 'react-ace';
 
@@ -16,9 +17,13 @@ import 'brace/mode/html';
 import 'brace/mode/php';
 import 'brace/mode/ruby';
 import 'brace/mode/swift';
+import 'brace/mode/jsx';
 import 'brace/theme/github';
+import 'brace/theme/xcode';
+import 'brace/theme/tomorrow';
 
 import {languagesMap} from '../../../constants/languages';
+import {aceConfig, editorTheme} from '../../../constants/AceConfig';
 
 const moment = require('moment');
 
@@ -43,6 +48,11 @@ class SnippetDetailsPage extends Component {
     }
 
 
+    onLoadEditor = (ace) => {
+        console.log(ace);
+    };
+
+
     render() {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
@@ -64,13 +74,14 @@ class SnippetDetailsPage extends Component {
                         <p style={styles.description}>{snippet.description}</p>
                         <AceEditor
                             mode={languagesMap[snippet.languageName.toLowerCase()]}
-                            theme="github"
+                            theme={editorTheme}
                             readOnly
                             style={styles.editor}
                             value={snippet.code}
                             showPrintMargin={false}
                             tabSize={4}
                             wrapEnabled
+                            setOptions={aceConfig}
                         />
                     </div>
                 </div>
@@ -89,4 +100,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {fetchSnippet})(SnippetDetailsPage);
+export default withRouter(connect(mapStateToProps, {fetchSnippet})(SnippetDetailsPage));

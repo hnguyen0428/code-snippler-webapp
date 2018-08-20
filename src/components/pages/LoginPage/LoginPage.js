@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import history from '../../../root/history';
 
@@ -21,6 +22,22 @@ import {showAlert, closeAlert} from '../../../redux/actions/alertActions';
 
 
 class LoginPage extends Component {
+    PASSWORD_INPUT_LABEL = 'Password must be alphanumeric and contains between 6-20 characters';
+    USERNAME_INPUT_LABEL = 'Username must contain only the characters [a-z, A-Z, 0-9, _] and be ' +
+        'between 6-20 characters';
+    REGISTER_BUTTON_LABEL = 'Become a Code Snippler';
+    LOGIN_BUTTON_LABEL = 'Login';
+
+    USERNAME_CHAR_INVALID_ERR = 'Username must contain only [a-zA-Z0-9_].';
+    USERNAME_LENGTH_ERR = 'Username must be between 6 to 20 characters.';
+    PASSWORD_CHAR_INVALID_ERR = 'Password must be alphanumeric.';
+    PASSWORD_LENGTH_ERR = 'Password must be between 6 to 20 characters.';
+    CONF_PW_NOT_MATCHED = 'Confirmation password does not match password';
+
+    WELCOME_MSG = 'Welcome';
+    REDIRECT_MSG = 'We will redirect you to the homepage in a bit...';
+
+
     constructor(props) {
         super(props);
 
@@ -40,20 +57,12 @@ class LoginPage extends Component {
         this.closeRegisterDialog = this.closeRegisterDialog.bind(this);
         this.submitRegister = this.submitRegister.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
-        this.closeErrorDialog = this.closeErrorDialog.bind(this);
     }
 
 
     closeRegisterDialog() {
         this.setState({
             dialogOpen: false
-        });
-    }
-
-
-    closeErrorDialog() {
-        this.setState({
-            errorDialogOpen: false
         });
     }
 
@@ -81,7 +90,7 @@ class LoginPage extends Component {
             this.props.register(this.state.registerUsername, this.state.registerPassword,
                 (res, err) => {
                     if (res) {
-                        this.props.showAlert('Welcome', 'We will redirect you to the homepage in a bit...');
+                        this.props.showAlert(this.WELCOME_MSG, this.REDIRECT_MSG);
                         setInterval(() => {
                             this.props.closeAlert();
                             history.push('/');
@@ -97,7 +106,8 @@ class LoginPage extends Component {
         this.props.login(this.state.loginUsername, this.state.loginPassword,
             (res, err) => {
                 if (res) {
-                    history.push('/');
+                    let prevPath = this.props.router.prevPath;
+                    history.push(prevPath);
 
                     // Reload to fetch information about feed
                     window.location.reload();
@@ -116,23 +126,23 @@ class LoginPage extends Component {
         let regex = new RegExp(/[a-zA-Z0-9_]/);
         let regexTest = regex.test(this.state.registerUsername);
         if (!regexTest)
-            errors.push('Username must contain only [a-zA-Z0-9_].');
+            errors.push(this.USERNAME_CHAR_INVALID_ERR);
 
         let rangeTest = this.withinRange(this.state.registerUsername, 6, 20);
         if (!rangeTest)
-            errors.push('Username must be between 6 to 20 characters.');
+            errors.push(this.USERNAME_LENGTH_ERR);
 
         regex = new RegExp(/[a-zA-Z0-9]/);
         regexTest = regex.test(this.state.registerPassword);
         if (!regexTest)
-            errors.push('Password must be alphanumeric.');
+            errors.push(this.PASSWORD_CHAR_INVALID_ERR);
 
         rangeTest = this.withinRange(this.state.registerPassword, 6, 20);
         if (!rangeTest)
-            errors.push('Password must be between 6 to 20 characters.');
+            errors.push(this.PASSWORD_LENGTH_ERR);
 
         if (errors.length === 0 && this.state.registerPassword !== this.state.registerConfirmPassword)
-            errors.push('Confirmation password does not match password');
+            errors.push(this.CONF_PW_NOT_MATCHED);
 
         return errors;
     }
@@ -168,7 +178,7 @@ class LoginPage extends Component {
                                        name="registerUsername"
                                 />
                                 <InputLabel style={styles.inputLabel}>
-                                    Username must contain only the characters [a-z, A-Z, 0-9, _] and be between 6-20 characters
+                                    {this.USERNAME_INPUT_LABEL}
                                 </InputLabel>
                             </div>
                             <div style={styles.inputCtn}>
@@ -185,7 +195,7 @@ class LoginPage extends Component {
                                        name="registerPassword"
                                 />
                                 <InputLabel style={styles.inputLabel}>
-                                    Password must be alphanumeric and contains between 6-20 characters
+                                    {this.PASSWORD_INPUT_LABEL}
                                 </InputLabel>
                             </div>
                             <div style={styles.inputCtn}>
@@ -205,7 +215,7 @@ class LoginPage extends Component {
                             <div style={styles.registerBtnCtn}>
                                 <Button color="primary" variant="raised" onClick={this.submitRegister}
                                         fullWidth>
-                                    Become a Code Snippler
+                                    {this.REGISTER_BUTTON_LABEL}
                                 </Button>
                             </div>
                         </div>
@@ -249,12 +259,14 @@ class LoginPage extends Component {
                                 disabled={this.state.loginUsername.length === 0 ||
                                 this.state.loginPassword.length === 0}
                             >
-                                Login
+                                {this.LOGIN_BUTTON_LABEL}
                             </Button>
                         </div>
 
-                        <h3 style={styles.registerText}>Don't have an account? <a href="javascript:void(0)"
-                                                                                  onClick={this.onClickRegister}>Register</a></h3>
+                        <h3 style={styles.registerText}>
+                            Don't have an account? {}
+                            <a href="javascript:void(0)" onClick={this.onClickRegister}>Register</a>
+                        </h3>
                     </div>
                 </Card>
             </div>
@@ -265,14 +277,15 @@ class LoginPage extends Component {
 
 function mapStateToProps(state) {
     return {
-        auth: state.auth
+        auth: state.auth,
+        router: state.router
     };
 }
 
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
     login,
     register,
     showAlert,
     closeAlert
-})(LoginPage);
+})(LoginPage));

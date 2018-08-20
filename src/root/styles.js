@@ -1,12 +1,16 @@
+import {theme} from '../constants/GlobalStyles';
+
+
 export const styles = {
     app: {
         fontFamily: 'Lucida Grande',
         fontSize: '25px',
-        backgroundColor: '#F9F9F9',
-        height: '100%',
-        width: '100%',
+        backgroundColor: theme.backgroundColor,
+        height: '100vh',
+        width: '100vw',
+        minHeight: '100vh',
+        minWidth: '100vw',
         color: '#213838',
-        position: 'absolute'
     },
     navBar: {
         backgroundColor: '#313133',

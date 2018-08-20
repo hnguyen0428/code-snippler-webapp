@@ -86,6 +86,19 @@ export const fetchSnippetsByIds = (snippetIds, params, callback, noResCB) => dis
 };
 
 
+export const fetchSnippetsByLanguage = (language, params, callback, noResCB) => dispatch => {
+    Snippler.snippet().getSnippetsByLanguage(language, params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({
+                type: FETCH_SNIPPETS,
+                payload: res.data
+            });
+        }
+    });
+};
+
+
 export const deleteSnippet = (snippetId, callback, noResCB) => dispatch => {
     Snippler.snippet().deleteSnippet(snippetId, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);

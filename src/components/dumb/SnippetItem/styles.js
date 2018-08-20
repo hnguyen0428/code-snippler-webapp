@@ -2,10 +2,14 @@ export const styles = {
     rootCtn: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
     },
     leftCtn: {
-        flex: '1'
+        flex: '1.5',
+        flexShrink: '1',
+        flexBasis: '0',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
     middleCtn: {
         flex: '5',
