@@ -24,15 +24,16 @@ import {Router, Route, Switch} from 'react-router-dom';
 import history from './history'
 
 import {logout} from "../redux/actions/authActions";
-import {showBinaryAlert, closeBinaryAlert} from "../redux/actions/alertActions";
+import {closeAlert, showBinaryAlert, closeBinaryAlert} from "../redux/actions/alertActions";
+import {overridePath} from "../redux/actions/routerActions";
 
-import CreateSnippetPage from '../components/pages/CreateSnippetPage/CreateSnippetPage';
+import SnippetFormPage from '../components/pages/SnippetFormPage/SnippetFormPage';
 import LoginPage from '../components/pages/LoginPage/LoginPage';
 import SnippetDetailsPage from '../components/pages/SnippetDetailsPage/SnippetDetailsPage';
 import HomePage from '../components/pages/HomePage/HomePage';
 
 import store from '../redux/store';
-import {ALERT_INACTIVE, ALERT_ACTIVE} from '../redux/actions/types';
+import {ALERT_INACTIVE} from '../redux/actions/types';
 
 import {styles} from './styles';
 
@@ -60,9 +61,15 @@ class App extends Component {
     handleAddSnippet = () => {
         if (!this.props.auth.loggedIn) {
             let actionOne = {title: 'Dismiss'};
-            let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+            let actionTwo = {title: 'Sign In', callback: () => {
+                this.redirectToLogin();
+                this.props.overridePath('/snippet');
+            }};
             if (!this.props.auth.loggedIn)
                 this.props.showBinaryAlert('Sign In?', 'To create a snippet, you must sign in', actionOne, actionTwo);
+        }
+        else {
+            history.push('/snippet');
         }
     };
 
@@ -90,9 +97,7 @@ class App extends Component {
 
 
     closeDialog = (event) => {
-        store.dispatch({
-            type: ALERT_INACTIVE
-        });
+        this.props.closeAlert();
     };
 
 
@@ -198,7 +203,7 @@ class App extends Component {
                 <Router history={history}>
                     <Switch>
                         <Route exact path="/" component={HomePage}/>
-                        <Route exact path="/snippet" component={CreateSnippetPage}/>
+                        <Route exact path="/snippet" component={SnippetFormPage}/>
                         <Route exact path="/login" component={LoginPage}/>
                         <Route exact path="/snippet/:snippetId" component={SnippetDetailsPage}/>
                     </Switch>
@@ -217,4 +222,10 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {logout, showBinaryAlert, closeBinaryAlert})(App);
+export default connect(mapStateToProps, {
+    logout,
+    showBinaryAlert,
+    closeBinaryAlert,
+    overridePath,
+    closeAlert
+})(App);

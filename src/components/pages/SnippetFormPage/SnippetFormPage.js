@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 
+import {styles} from './styles';
+
 
 class CreateSnippetPage extends Component {
     render() {
         return (
-            <div>
+            <div style={styles.rootCtn}>
                 <h1>Create Snippet Page</h1>
             </div>
         );
@@ -15,7 +17,8 @@ class CreateSnippetPage extends Component {
 
 function mapStateToProps(state) {
     return {
-
+        auth: state.auth,
+        snippets: state.snippets
     };
 }
 

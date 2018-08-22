@@ -19,6 +19,7 @@ import {styles} from './styles';
 
 import {login, register} from '../../../redux/actions/authActions';
 import {showAlert, closeAlert} from '../../../redux/actions/alertActions';
+import {resetOverridePath} from '../../../redux/actions/routerActions';
 
 
 class LoginPage extends Component {
@@ -107,7 +108,13 @@ class LoginPage extends Component {
             (res, err) => {
                 if (res) {
                     let prevPath = this.props.router.prevPath;
-                    history.push(prevPath);
+                    let overridePath = this.props.router.overridePath;
+                    if (overridePath)
+                        history.push(overridePath);
+                    else
+                        history.push(prevPath);
+
+                    this.props.resetOverridePath();
 
                     // Reload to fetch information about feed
                     window.location.reload();
@@ -287,5 +294,6 @@ export default withRouter(connect(mapStateToProps, {
     login,
     register,
     showAlert,
-    closeAlert
+    closeAlert,
+    resetOverridePath
 })(LoginPage));
