@@ -2,7 +2,8 @@ import Snippler from '../../api/SnipplerClient';
 import {
     CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
     SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES,
-    FETCH_COMMENTS, FETCH_USER, CREATE_COMMENT, FETCH_SNIPPETS, FETCH_USERS
+    FETCH_COMMENTS, FETCH_USER, CREATE_COMMENT, FETCH_SNIPPETS, FETCH_USERS, SHOULD_INCREASE_VIEW,
+    RESET_INCREASE_VIEW
 } from '../actions/types';
 import {handleActionsResult} from './actions';
 
@@ -239,4 +240,13 @@ export const fetchMostSavedSnippets = (params, callback, noResCB) => dispatch =>
             dispatch({type: FETCH_MOST_SAVED, payload: res.data});
         }
     });
+};
+
+
+export const setShouldIncreaseView = () => dispatch => {
+    dispatch({type: SHOULD_INCREASE_VIEW});
+};
+
+export const resetShouldIncreaseView = () => dispatch => {
+    dispatch({type: RESET_INCREASE_VIEW});
 };

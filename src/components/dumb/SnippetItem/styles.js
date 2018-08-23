@@ -26,9 +26,11 @@ export const styles = {
         marginBottom: '5px'
     },
     title: {
-        fontFamily: 'inherit',
+        fontFamily: '\"Roboto\", \"Helvetica\", \"Arial\"',
         fontSize: '15px',
         cursor: 'pointer',
+        color: 'rgb(0, 0, 0, 0.54)',
+        lineHeight: '1.3em'
     },
     language: {
         fontFamily: 'inherit',
@@ -49,7 +51,7 @@ export const styles = {
         width: '100%',
         height: '20px',
         justifyContent: 'flex-start',
-        paddingBottom: '5px',
+        paddingBottom: '20px',
     },
     iconCtn: {
         fontSize: '18px',

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import ListItem from '@material-ui/core/ListItem';
+import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -19,21 +19,16 @@ import history from '../../../root/history';
 
 import {styles} from './styles';
 
-import {upvoteSnippet, downvoteSnippet, saveSnippet} from '../../../redux/actions/snippetActions';
+import {upvoteSnippet, downvoteSnippet, saveSnippet, setShouldIncreaseView} from '../../../redux/actions/snippetActions';
 import {showBinaryAlert, closeBinaryAlert} from '../../../redux/actions/alertActions';
 
 
 class SnippetItem extends Component {
     onClickSnippet = () => {
         let snippetId = this.props.snippetId;
-        history.push({
-            pathname: `/snippet/${snippetId}`,
-            state: {
-                params: {
-                    increaseViewcount: true
-                }
-            }
-        });
+
+        this.props.setShouldIncreaseView();
+        history.push(`/snippet/${snippetId}`);
     };
 
 
@@ -104,7 +99,7 @@ class SnippetItem extends Component {
 
                 <div style={styles.middleCtn}>
                     <div style={styles.titleCtn} onClick={this.onClickSnippet}>
-                        <InputLabel style={styles.title}>{snippet.title}</InputLabel>
+                        <p style={styles.title}>{snippet.title}</p>
                     </div>
                     <div style={styles.iconsCtn}>
                         <Tooltip disableFocusListener disableTouchListener title="Save">
@@ -169,5 +164,6 @@ export default connect(mapStateToProps, {
     downvoteSnippet,
     saveSnippet,
     showBinaryAlert,
-    closeBinaryAlert
+    closeBinaryAlert,
+    setShouldIncreaseView
 })(SnippetItem);

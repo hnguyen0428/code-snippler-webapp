@@ -1,11 +1,12 @@
 import {CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
     SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES,
     FETCH_MY_SAVED_SNIPPETS, FETCH_MY_CREATED_SNIPPETS, FETCH_USER_SAVED_SNIPPETS,
-    FETCH_USER_CREATED_SNIPPETS, FETCH_SNIPPETS} from '../actions/types';
+    FETCH_USER_CREATED_SNIPPETS, FETCH_SNIPPETS, SHOULD_INCREASE_VIEW, RESET_INCREASE_VIEW} from '../actions/types';
 
 
 const initialState = {
-    byIds: {}
+    byIds: {},
+    increaseViewcount: false
 };
 
 
@@ -122,6 +123,16 @@ export default function(state = initialState, action) {
                 byIds: byIds
             };
         }
+        case SHOULD_INCREASE_VIEW:
+            return {
+                ...state,
+                increaseViewcount: true
+            };
+        case RESET_INCREASE_VIEW:
+            return {
+                ...state,
+                increaseViewcount: false
+            };
         default:
             return state;
     }

@@ -6,7 +6,7 @@ import AceEditor from 'react-ace';
 
 import {styles} from './styles';
 
-import {fetchSnippet} from "../../../redux/actions/snippetActions";
+import {fetchSnippet, resetShouldIncreaseView} from "../../../redux/actions/snippetActions";
 
 import 'brace/mode/java';
 import 'brace/mode/c_cpp';
@@ -41,10 +41,11 @@ class SnippetDetailsPage extends Component {
             showUserDetails: true
         };
 
-        if (this.props.location.state && this.props.location.state.params)
-            params = {...params, ...this.props.location.state.params};
+        if (this.props.snippets.increaseViewcount)
+            params = {...params, increaseViewcount: true};
 
         this.props.fetchSnippet(this.props.match.params.snippetId, params);
+        this.props.resetShouldIncreaseView();
     }
 
 
@@ -96,4 +97,4 @@ function mapStateToProps(state) {
 }
 
 
-export default withRouter(connect(mapStateToProps, {fetchSnippet})(SnippetDetailsPage));
+export default withRouter(connect(mapStateToProps, {fetchSnippet, resetShouldIncreaseView})(SnippetDetailsPage));
