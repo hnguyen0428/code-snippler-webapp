@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import ListItem from '@material-ui/core/ListItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -91,7 +93,7 @@ class SnippetItem extends Component {
         }
 
         return (
-            <ListItem style={rootCtn}>
+            <Paper style={rootCtn}>
                 <div style={styles.leftCtn}>
                     <Button style={styles.language}>
                         <ArrowBackIos style={styles.arrowBack}/>
@@ -102,7 +104,7 @@ class SnippetItem extends Component {
 
                 <div style={styles.middleCtn}>
                     <div style={styles.titleCtn} onClick={this.onClickSnippet}>
-                        <h3 style={styles.title}>{snippet.title}</h3>
+                        <InputLabel style={styles.title}>{snippet.title}</InputLabel>
                     </div>
                     <div style={styles.iconsCtn}>
                         <Tooltip disableFocusListener disableTouchListener title="Save">
@@ -137,14 +139,14 @@ class SnippetItem extends Component {
 
 
                 <div style={styles.rightCtn}>
-                    <IconButton disabled>
+                    <Button style={styles.viewIconBtn} disabled>
                         <Visibility style={styles.viewIcon}/>
                         <p style={styles.viewText}>
                             {snippet.viewsCount}
                         </p>
-                    </IconButton>
+                    </Button>
                 </div>
-            </ListItem>
+            </Paper>
         );
     }
 }

@@ -1,6 +1,8 @@
 export const styles = {
     snippetItem: {
-        marginTop: '10px',
-        marginBottom: '10px'
+        marginTop: '25px',
+        marginBottom: '25px',
+        paddingTop: '10px',
+        paddingBottom: '10px'
     }
 };

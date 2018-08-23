@@ -48,11 +48,6 @@ class SnippetDetailsPage extends Component {
     }
 
 
-    onLoadEditor = (ace) => {
-        console.log(ace);
-    };
-
-
     render() {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
@@ -73,6 +68,7 @@ class SnippetDetailsPage extends Component {
                         <hr/>
                         <p style={styles.description}>{snippet.description}</p>
                         <AceEditor
+                            id="ace-editor"
                             mode={languagesMap[snippet.languageName.toLowerCase()]}
                             theme={editorTheme}
                             readOnly

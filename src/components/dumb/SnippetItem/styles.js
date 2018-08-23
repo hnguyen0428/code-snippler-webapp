@@ -9,27 +9,33 @@ export const styles = {
         flexBasis: '0',
         display: 'flex',
         justifyContent: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     middleCtn: {
         flex: '5',
     },
     rightCtn: {
-        width: '30px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         textAlign: 'center',
+        flex: '1',
+    },
+    titleCtn: {
+        backgroundColor: 'transparent',
+        marginBottom: '5px'
     },
     title: {
         fontFamily: 'inherit',
         fontSize: '15px',
-        cursor: 'pointer'
+        cursor: 'pointer',
     },
     language: {
         fontFamily: 'inherit',
         fontSize: '12px',
         marginRight: '10px',
+        height: '20px',
+        alignSelf: 'center'
     },
     arrowBack: {
 
@@ -37,15 +43,13 @@ export const styles = {
     arrowForward: {
         marginLeft: '3px'
     },
-    titleCtn: {
-        backgroundColor: 'transparent'
-    },
     iconsCtn: {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
         height: '20px',
         justifyContent: 'flex-start',
+        paddingBottom: '5px',
     },
     iconCtn: {
         fontSize: '18px',
@@ -69,5 +73,8 @@ export const styles = {
     },
     viewText: {
         color: '#727272'
+    },
+    viewIconBtn: {
+        alignSelf: 'center',
     }
 };
