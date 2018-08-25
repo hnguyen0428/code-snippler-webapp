@@ -23,7 +23,7 @@ import 'brace/theme/xcode';
 import 'brace/theme/tomorrow';
 
 import {languagesMap} from '../../../constants/languages';
-import {aceConfig, editorTheme} from '../../../constants/AceConfig';
+import {readAceConfig as aceConfig, editorTheme} from '../../../constants/AceConfig';
 
 const moment = require('moment');
 

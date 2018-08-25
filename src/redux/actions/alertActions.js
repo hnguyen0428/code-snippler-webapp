@@ -31,6 +31,9 @@ export const showBinaryAlert = (title, message, actionOne, actionTwo) => dispatc
     actionOne.callback = actionOne.callback ? actionOne.callback : closeBinaryAlert;
     actionTwo.callback = actionTwo.callback ? actionTwo.callback : closeBinaryAlert;
 
+    actionOne.title = actionOne.title ? actionOne.title : 'No';
+    actionTwo.title = actionTwo.title ? actionTwo.title : 'Yes';
+
     dispatch({
         type: BINARY_ALERT_ACTIVE,
         payload: {
