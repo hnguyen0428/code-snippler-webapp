@@ -13,3 +13,8 @@ export const languagesMap = {
     "swift": "swift",
     "c": "c_cpp"
 };
+
+
+export const supportedLanguages = [
+    'Python', 'Java', 'C++', 'Ruby', 'JavaScript', 'ReactJS', 'ReactNative', 'Angular', 'Swift', 'C'
+];
