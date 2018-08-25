@@ -7,6 +7,7 @@ import snippetReducer from './snippetReducer';
 import commentReducer from './commentReducer';
 import languageReducer from './languageReducer';
 import alertReducer from './alertReducer';
+import settingsReducer from './settingsReducer';
 
 
 export default combineReducers({
@@ -17,5 +18,6 @@ export default combineReducers({
     languages: languageReducer,
     router: routerReducer,
     alert: alertReducer,
-    routing: reactRouterReducer
+    routing: reactRouterReducer,
+    settings: settingsReducer
 });

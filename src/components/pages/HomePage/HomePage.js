@@ -20,7 +20,10 @@ import {
     searchSnippets
 } from "../../../redux/actions/snippetActions";
 
+import {saveSettings} from '../../../redux/actions/settingsActions';
+
 import SnippetsList from '../../dumb/SnippetsList/SnippetsList';
+import FeedSettings from '../../../constants/FeedSettings';
 
 import {styles} from './styles';
 
@@ -30,12 +33,17 @@ class HomePage extends Component {
         super(props);
 
         this.state = {
-            popularIds: []
+            snippetIds: []
         };
     }
 
     componentWillMount() {
-        this.props.fetchPopularSnippets(null, (res, err) => {
+        this.queryFeed();
+    }
+
+
+    queryFeed = (settingsCode) => {
+        const setSnippetIds = (res, err) => {
             if (res) {
                 let snippets = res.data;
                 let snippetIds = [];
@@ -43,11 +51,30 @@ class HomePage extends Component {
                     snippetIds.push(snippet.snippetId);
                 });
                 this.setState({
-                    popularIds: snippetIds
+                    snippetIds: snippetIds
                 });
             }
-        });
-    }
+        };
+
+        settingsCode = settingsCode !== undefined ? settingsCode : this.props.settings.feedSettings;
+
+        switch (settingsCode) {
+            case FeedSettings.MOST_POPULAR:
+                this.props.fetchPopularSnippets(null, setSnippetIds);
+                return;
+            case FeedSettings.MOST_VIEWS:
+                this.props.fetchMostViewsSnippets(null, setSnippetIds);
+                return;
+            case FeedSettings.MOST_UPVOTED:
+                this.props.fetchMostUpvotesSnippets(null, setSnippetIds);
+                return;
+            case FeedSettings.MOST_SAVED:
+                this.props.fetchMostSavedSnippets(null, setSnippetIds);
+                return;
+            default:
+                break;
+        }
+    };
 
 
     handleToggle = () => {
@@ -64,14 +91,37 @@ class HomePage extends Component {
     };
 
 
+    handleSettingsChange = (event) => {
+        switch (event.target.id) {
+            case 'mostPopular':
+                this.props.saveSettings(FeedSettings.MOST_POPULAR);
+                this.queryFeed(FeedSettings.MOST_POPULAR);
+                break;
+            case 'mostViews':
+                this.props.saveSettings(FeedSettings.MOST_VIEWS);
+                this.queryFeed(FeedSettings.MOST_VIEWS);
+                break;
+            case 'mostUpvoted':
+                this.props.saveSettings(FeedSettings.MOST_UPVOTED);
+                this.queryFeed(FeedSettings.MOST_UPVOTED);
+                break;
+            case 'mostSaved':
+                this.props.saveSettings(FeedSettings.MOST_SAVED);
+                this.queryFeed(FeedSettings.MOST_SAVED);
+                break;
+        }
+    };
+
+
     render() {
         let snippets = [];
-        this.state.popularIds.forEach(id => {
+        this.state.snippetIds.forEach(id => {
             if (this.props.snippets.byIds[id])
                 snippets.push(this.props.snippets.byIds[id]);
         });
 
         const { open } = this.state;
+        let currentSettings = localStorage.getItem('feedSettings');
 
         return (
             <div style={styles.rootCtn}>
@@ -93,10 +143,30 @@ class HomePage extends Component {
                                     <ClickAwayListener onClickAway={this.handleClose}>
                                         <MenuList>
                                             <MenuItem disabled>Filter By</MenuItem>
-                                            <MenuItem>Most Popular</MenuItem>
-                                            <MenuItem>Most Views</MenuItem>
-                                            <MenuItem>Most Upvoted</MenuItem>
-                                            <MenuItem>Most Saved</MenuItem>
+                                            <MenuItem id="mostPopular"
+                                                      onClick={this.handleSettingsChange}
+                                                      selected={currentSettings === FeedSettings.MOST_POPULAR}
+                                            >
+                                                Most Popular
+                                            </MenuItem>
+                                            <MenuItem id="mostViews"
+                                                      onClick={this.handleSettingsChange}
+                                                      selected={currentSettings === FeedSettings.MOST_VIEWS}
+                                            >
+                                                Most Views
+                                            </MenuItem>
+                                            <MenuItem id="mostUpvoted"
+                                                      onClick={this.handleSettingsChange}
+                                                      selected={currentSettings === FeedSettings.MOST_UPVOTED}
+                                            >
+                                                Most Upvoted
+                                            </MenuItem>
+                                            <MenuItem id="mostSaved"
+                                                      onClick={this.handleSettingsChange}
+                                                      selected={currentSettings === FeedSettings.MOST_SAVED}
+                                            >
+                                                Most Saved
+                                            </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>
@@ -113,7 +183,8 @@ class HomePage extends Component {
 function mapStateToProps(state) {
     return {
         auth: state.auth,
-        snippets: state.snippets
+        snippets: state.snippets,
+        settings: state.settings
     };
 }
 
@@ -123,5 +194,6 @@ export default withRouter(connect(mapStateToProps, {
     fetchMostSavedSnippets,
     fetchMostViewsSnippets,
     fetchMostUpvotesSnippets,
-    searchSnippets
+    searchSnippets,
+    saveSettings
 })(HomePage));
