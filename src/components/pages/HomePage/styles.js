@@ -9,7 +9,16 @@ export const styles = {
         height: '100%',
         backgroundColor: theme.backgroundColor
     },
+    contentCtn: {
+        width: '800px',
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '20px'
+    },
     snippetsCtn: {
-        width: '800px'
+        width: '100%'
+    },
+    settingsIcon: {
+        alignSelf: 'flex-end'
     }
 };
