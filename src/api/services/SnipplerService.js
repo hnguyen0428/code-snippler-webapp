@@ -34,6 +34,19 @@ export default class SnipplerService {
         // Overwrite the default headers if the config passed in has headers defined
         config.headers = config.headers || this.headers;
 
+        // Use form data for post patch put requests
+        if (config.params) {
+            if (config.method === 'post') {
+                let formData = new FormData();
+                for (let key in config.params)
+                    formData.set(key, config.params[key]);
+
+                delete config['params'];
+                config.data = formData;
+            }
+        }
+
+
         axios(config)
             .then(function(response) {
                 callback(response, null);

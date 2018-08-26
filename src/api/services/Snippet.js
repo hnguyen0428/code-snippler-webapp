@@ -1,4 +1,5 @@
 import SnipplerService from "./SnipplerService";
+import querystring from 'querystring';
 
 
 const ENDPOINTS = {
@@ -7,8 +8,8 @@ const ENDPOINTS = {
         method: 'post'
     },
     updateSnippet: {
-        value: '/api/snippet/{snippetId}',
-        method: 'patch'
+        value: '/api/snippet/{snippetId}/update',
+        method: 'post'
     },
     deleteSnippet: {
         value: '/api/snippet/{snippetId}',
@@ -79,7 +80,7 @@ export default class Snippet extends SnipplerService {
         let config = {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.createSnippet.value),
             method: ENDPOINTS.createSnippet.method,
-            params: params
+            params: params,
         };
 
         this.request(config, function(response, error) {
