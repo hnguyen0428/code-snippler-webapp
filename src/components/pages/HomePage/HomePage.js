@@ -28,12 +28,12 @@ import {saveSettings} from '../../../redux/actions/settingsActions';
 import SnippetsList from '../../dumb/SnippetsList/SnippetsList';
 import FeedSettings from '../../../constants/FeedSettings';
 
+import SnipplerConfig from '../../../constants/SnipplerConfig';
+
 import {styles} from './styles';
 
 
 class HomePage extends Component {
-    PAGE_SIZE = 8;
-
     MOST_POPULAR_MENUITEM = "mostPopular";
     MOST_VIEWS_MENUITEM = "mostViews";
     MOST_UPVOTED_MENUITEM = "mostUpvoted";
@@ -47,7 +47,7 @@ class HomePage extends Component {
             snippetIds: [],
             paginationParams: {
                 page: 0,
-                pageSize: this.PAGE_SIZE
+                pageSize: SnipplerConfig.FEED_PAGE_SIZE
             }
         };
     }
@@ -183,7 +183,7 @@ class HomePage extends Component {
 
                         <SnippetsList style={styles.snippetsCtn} snippets={snippets}/>
                         <Paginator
-                            page={this.state.paginationParams.page}
+                            page={this.state.paginationParams.page + 1}
                             onLeftIconClick={this.handleBackwardPaging}
                             onRightIconClick={this.handleForwardPaging}
                             leftDisabled={this.state.paginationParams.page === 0}
@@ -237,7 +237,7 @@ class HomePage extends Component {
                             <InputLabel style={styles.noSnippetMessage}>There are no snippets here</InputLabel>
                         </div>
                         <Paginator
-                            page={this.state.paginationParams.page}
+                            page={this.state.paginationParams.page + 1}
                             onLeftIconClick={this.handleBackwardPaging}
                             onRightIconClick={this.handleForwardPaging}
                             leftDisabled={this.state.paginationParams.page === 0}

@@ -8,6 +8,7 @@ import commentReducer from './commentReducer';
 import languageReducer from './languageReducer';
 import alertReducer from './alertReducer';
 import settingsReducer from './settingsReducer';
+import searchReducer from './searchReducer';
 
 
 export default combineReducers({
@@ -19,5 +20,6 @@ export default combineReducers({
     router: routerReducer,
     alert: alertReducer,
     routing: reactRouterReducer,
-    settings: settingsReducer
+    settings: settingsReducer,
+    searcher: searchReducer
 });

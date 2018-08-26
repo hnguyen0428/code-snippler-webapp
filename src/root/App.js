@@ -16,6 +16,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import SearchBar from '../components/dumb/SearchBar/SearchBar';
+
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Add from '@material-ui/icons/Add';
 
@@ -26,14 +28,15 @@ import history from './history'
 import {logout} from "../redux/actions/authActions";
 import {closeAlert, showBinaryAlert, closeBinaryAlert} from "../redux/actions/alertActions";
 import {overridePath} from "../redux/actions/routerActions";
+import {searchSnippets} from "../redux/actions/snippetActions";
 
 import SnippetFormPage from '../components/pages/SnippetFormPage/SnippetFormPage';
 import LoginPage from '../components/pages/LoginPage/LoginPage';
 import SnippetDetailsPage from '../components/pages/SnippetDetailsPage/SnippetDetailsPage';
 import HomePage from '../components/pages/HomePage/HomePage';
+import SearchPage from '../components/pages/SearchPage/SearchPage';
 
-import store from '../redux/store';
-import {ALERT_INACTIVE} from '../redux/actions/types';
+import SnipplerConfig from '../constants/SnipplerConfig';
 
 import {styles} from './styles';
 
@@ -43,6 +46,7 @@ class App extends Component {
         super(props);
         this.state = {
             open: false,
+            searchQuery: ''
         }
     }
 
@@ -101,6 +105,28 @@ class App extends Component {
     };
 
 
+    handleSearchBarEdit = (event) => {
+        this.setState({searchQuery: event.target.value});
+    };
+
+
+    handleSearch = (query) => {
+        if (query.length !== 0) {
+            let params = {
+                page: 0,
+                pageSize: SnipplerConfig.SEARCH_PAGE_SIZE,
+                query: query
+            };
+
+            this.props.searchSnippets(params);
+
+            if (this.props.router.path !== '/search') {
+                history.push('/search');
+            }
+        }
+    };
+
+
     render() {
         const { open } = this.state;
 
@@ -153,7 +179,14 @@ class App extends Component {
                             <Button href="/" style={styles.navBarTitle}>
                                 Code Snippler
                             </Button>
+                            <SearchBar
+                                style={styles.searchBar}
+                                onClickSearch={this.handleSearch}
+                                onChange={this.handleSearchBarEdit}
+                                value={this.state.searchQuery}
+                            />
                         </div>
+
                         <div style={styles.loginButtonCtn}>
                             <Tooltip disableFocusListener disableTouchListener title="Add a Snippet">
                                 <IconButton
@@ -206,6 +239,7 @@ class App extends Component {
                         <Route exact path="/snippet" component={SnippetFormPage}/>
                         <Route exact path="/login" component={LoginPage}/>
                         <Route exact path="/snippet/:snippetId" component={SnippetDetailsPage}/>
+                        <Route exact path="/search" component={SearchPage}/>
                     </Switch>
                 </Router>
             </div>
@@ -217,7 +251,8 @@ class App extends Component {
 function mapStateToProps(state) {
     return {
         auth: state.auth,
-        alert: state.alert
+        alert: state.alert,
+        router: state.router
     }
 }
 
@@ -227,5 +262,6 @@ export default connect(mapStateToProps, {
     showBinaryAlert,
     closeBinaryAlert,
     overridePath,
-    closeAlert
+    closeAlert,
+    searchSnippets
 })(App);

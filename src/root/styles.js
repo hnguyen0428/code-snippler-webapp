@@ -26,13 +26,16 @@ export const styles = {
     navBarButtonsCtn: {
         display: 'flex',
         justifyContent: 'left',
-        flexGrow: '1'
+        flexGrow: '2',
     },
     navBarTitle: {
         fontFamily: 'Courier New Lucida Console',
         fontSize: '20px',
         fontWeight: '600',
         color: '#E1E1E1'
+    },
+    searchBar: {
+        flex: '1'
     },
     codeIcon: {
         marginRight: '5px',
@@ -41,7 +44,7 @@ export const styles = {
     loginButtonCtn: {
         display: 'flex',
         justifyContent: 'flex-end',
-        flexGrow: '1'
+        flexGrow: '3'
     },
     loginButton: {
         fontFamily: 'inherit',

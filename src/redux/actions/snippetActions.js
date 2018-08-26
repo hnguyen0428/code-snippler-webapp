@@ -3,7 +3,7 @@ import {
     CREATE_SNIPPET, FETCH_SNIPPET, UPDATE_SNIPPET, DELETE_SNIPPET, UPVOTE_SNIPPET, DOWNVOTE_SNIPPET,
     SAVE_SNIPPET, FETCH_POPULAR, FETCH_MOST_VIEWS, FETCH_MOST_SAVED, FETCH_MOST_UPVOTES,
     FETCH_COMMENTS, FETCH_USER, CREATE_COMMENT, FETCH_SNIPPETS, FETCH_USERS, SHOULD_INCREASE_VIEW,
-    RESET_INCREASE_VIEW
+    RESET_INCREASE_VIEW, SEARCH_SNIPPETS
 } from '../actions/types';
 import {handleActionsResult} from './actions';
 
@@ -191,12 +191,22 @@ export const fetchComments = (snippetId, params, callback, noResCB) => dispatch 
 
 
 export const searchSnippets = (params, callback, noResCB) => dispatch => {
+    params.query = params.query ? params.query : '';
+
     Snippler.snippet().searchSnippets(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {
             dispatch({
                 type: FETCH_SNIPPETS,
                 payload: res.data
+            });
+
+            dispatch({
+                type: SEARCH_SNIPPETS,
+                payload: {
+                    values: res.data,
+                    query: params.query
+                }
             });
         }
     });
