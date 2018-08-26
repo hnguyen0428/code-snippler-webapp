@@ -192,6 +192,7 @@ export const fetchComments = (snippetId, params, callback, noResCB) => dispatch 
 
 export const searchSnippets = (params, callback, noResCB) => dispatch => {
     params.query = params.query ? params.query : '';
+    params = {...params, languages: Snippler.constructLanguagesFilter()};
 
     Snippler.snippet().searchSnippets(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
@@ -214,6 +215,11 @@ export const searchSnippets = (params, callback, noResCB) => dispatch => {
 
 
 export const fetchPopularSnippets = (params, callback, noResCB) => dispatch => {
+    if (params)
+        params = {...params, languages: Snippler.constructLanguagesFilter()};
+    else
+        params = {languages: Snippler.constructLanguagesFilter()};
+
     Snippler.snippet().getPopular(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {
@@ -224,6 +230,11 @@ export const fetchPopularSnippets = (params, callback, noResCB) => dispatch => {
 
 
 export const fetchMostViewsSnippets = (params, callback, noResCB) => dispatch => {
+    if (params)
+        params = {...params, languages: Snippler.constructLanguagesFilter()};
+    else
+        params = {languages: Snippler.constructLanguagesFilter()};
+
     Snippler.snippet().getMostViews(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {
@@ -234,6 +245,11 @@ export const fetchMostViewsSnippets = (params, callback, noResCB) => dispatch =>
 
 
 export const fetchMostUpvotesSnippets = (params, callback, noResCB) => dispatch => {
+    if (params)
+        params = {...params, languages: Snippler.constructLanguagesFilter()};
+    else
+        params = {languages: Snippler.constructLanguagesFilter()};
+
     Snippler.snippet().getMostUpvotes(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {
@@ -244,6 +260,11 @@ export const fetchMostUpvotesSnippets = (params, callback, noResCB) => dispatch 
 
 
 export const fetchMostSavedSnippets = (params, callback, noResCB) => dispatch => {
+    if (params)
+        params = {...params, languages: Snippler.constructLanguagesFilter()};
+    else
+        params = {languages: Snippler.constructLanguagesFilter()};
+
     Snippler.snippet().getMostSaved(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {

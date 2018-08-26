@@ -73,6 +73,8 @@ const ENDPOINTS = {
 export default class Snippet extends SnipplerService {
     constructor(config) {
         super(config);
+
+        this.languagesFilter = config.languagesFilter;
     }
 
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -15,10 +16,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Tooltip from '@material-ui/core/Tooltip';
+import Drawer from '@material-ui/core/Drawer';
+import InputLabel from '@material-ui/core/InputLabel';
 
 import SearchBar from '../components/dumb/SearchBar/SearchBar';
+import SelectableChip from '../components/dumb/SelectableChip/SelectableChip';
 
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import FilterList from '@material-ui/icons/FilterList';
+import RadioButtonChecked from '@material-ui/icons/RadioButtonChecked';
+import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import Add from '@material-ui/icons/Add';
 
 
@@ -37,22 +44,45 @@ import HomePage from '../components/pages/HomePage/HomePage';
 import SearchPage from '../components/pages/SearchPage/SearchPage';
 
 import SnipplerConfig from '../constants/SnipplerConfig';
+import {supportedLanguages} from '../constants/languages';
+import Snippler from '../api/SnipplerClient';
 
-import {styles} from './styles';
+import {styles, textColor} from './styles';
 
 
 class App extends Component {
     constructor(props) {
         super(props);
+
+        const languagesFilter = {};
+        supportedLanguages.map(language => {languagesFilter[language] = false});
+
+        let languages = Snippler.getLanguagesFilter();
+
+        if (Snippler.getLanguagesFilter().length === 0)
+            languagesFilter["All"] = true;
+        else
+            languages.forEach(language => {languagesFilter[language] = true});
+
         this.state = {
             open: false,
-            searchQuery: ''
+            filterDrawerOpen: false,
+            searchQuery: '',
+            languagesFilter: languagesFilter
         }
     }
 
 
     handleToggle = () => {
         this.setState(state => ({ open: !this.state.open }));
+    };
+
+
+    toggleFilterDrawer = (open) => {
+        if (open !== undefined)
+            this.setState({filterDrawerOpen: open});
+        else
+            this.setState({filterDrawerOpen: !this.state.filterDrawerOpen});
     };
 
 
@@ -74,6 +104,40 @@ class App extends Component {
         }
         else {
             history.push('/snippet');
+        }
+    };
+
+
+    handleClickFilterButton = () => {
+        this.setState({filterDrawerOpen: !this.state.filterDrawerOpen});
+    };
+
+
+    onClickFilterChip = (chip, checked) => {
+        if (chip.props.name === "All" && checked) {
+            const languagesFilter = {};
+            supportedLanguages.map(language => {
+                languagesFilter[language] = false
+            });
+            Snippler.resetLanguagesFilter();
+            languagesFilter["All"] = true;
+
+            this.setState({
+                languagesFilter: languagesFilter
+            });
+        }
+        else {
+            this.setState({
+                languagesFilter: {
+                    ...this.state.languagesFilter,
+                    All: false,
+                    [chip.props.name]: checked
+                }
+            });
+            if (checked)
+                Snippler.addToLanguagesFilter(chip.props.name);
+            else
+                Snippler.removeFromLanguagesFilter(chip.props.name);
         }
     };
 
@@ -132,6 +196,36 @@ class App extends Component {
 
         return (
             <div style={styles.app}>
+                <Drawer anchor="right" open={this.state.filterDrawerOpen}
+                        onClose={() => this.toggleFilterDrawer(false)}
+                >
+                    <div style={styles.filterDrawer}>
+                        <SelectableChip
+                            name="All"
+                            label="All"
+                            checked={this.state.languagesFilter["All"]}
+                            onClick={this.onClickFilterChip}
+                            checkedIcon={<RadioButtonChecked/>}
+                            icon={<RadioButtonUnchecked/>}
+                        />
+                        {supportedLanguages.map(language => {
+                            return (
+                                <SelectableChip
+                                    name={language}
+                                    label={language}
+                                    checked={this.state.languagesFilter[language]}
+                                    onClick={this.onClickFilterChip}
+                                />
+                            );
+                        })}
+                        <Toolbar>
+                            <InputLabel style={styles.filterHelpText}>
+                                You must refresh the page for the filters to take effects
+                            </InputLabel>
+                        </Toolbar>
+                    </div>
+                </Drawer>
+
                 <Dialog id="General Alert"
                         open={this.props.alert.generalAlert.active}
                         onBackdropClick={this.closeDialog}
@@ -188,6 +282,14 @@ class App extends Component {
                         </div>
 
                         <div style={styles.loginButtonCtn}>
+                            <Tooltip disableFocusListener disableTouchListener title="Filter by Languages">
+                                <IconButton
+                                    onClick={this.handleClickFilterButton}
+                                >
+                                    <FilterList style={styles.iconColor}/>
+                                </IconButton>
+                            </Tooltip>
+
                             <Tooltip disableFocusListener disableTouchListener title="Add a Snippet">
                                 <IconButton
                                     onClick={this.handleAddSnippet}

@@ -1,6 +1,8 @@
 import {theme} from '../constants/GlobalStyles';
 
 
+export const textColor = '#E1E1E1';
+
 export const styles = {
     app: {
         fontFamily: 'Lucida Grande',
@@ -32,7 +34,15 @@ export const styles = {
         fontFamily: 'Courier New Lucida Console',
         fontSize: '20px',
         fontWeight: '600',
-        color: '#E1E1E1'
+        color: textColor
+    },
+    filterDrawer: {
+        backgroundColor: '#313133',
+        height: '100%'
+    },
+    filterHelpText: {
+        maxWidth: '200px',
+        color: 'white'
     },
     searchBar: {
         flex: '1'
@@ -51,9 +61,9 @@ export const styles = {
         fontSize: '18px'
     },
     iconColor: {
-        color: '#E1E1E1'
+        color: textColor
     },
     usernameMenuItem: {
         backgroundColor: '#F9F9F9'
-    }
+    },
 };

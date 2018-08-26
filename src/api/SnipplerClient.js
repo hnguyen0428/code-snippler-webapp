@@ -10,9 +10,9 @@ class SnipplerClient {
         this.config = {
             baseUrl: config.baseUrl,
             clientKey: config.clientKey,
-            apiKey: config.apiKey
-        }
-
+            apiKey: config.apiKey,
+            languagesFilter: config.languagesFilter ? config.languagesFilter : []
+        };
     }
 
     setApiKey(key) {
@@ -42,12 +42,43 @@ class SnipplerClient {
     comment() {
         return new Comment(this.config);
     }
+
+    addToLanguagesFilter(language) {
+        this.config.languagesFilter.push(language);
+        localStorage.setItem("languagesFilter", this.config.languagesFilter.join(","));
+    }
+
+    removeFromLanguagesFilter(language) {
+        let index = this.config.languagesFilter.indexOf(language);
+        if (index !== -1) {
+            this.config.languagesFilter.splice(index, 1);
+            localStorage.setItem("languagesFilter", this.config.languagesFilter.join(","));
+        }
+    }
+
+    resetLanguagesFilter() {
+        this.config.languagesFilter = [];
+        localStorage.removeItem("languagesFilter");
+    }
+
+    constructLanguagesFilter() {
+        return this.config.languagesFilter.length !== 0 ? this.config.languagesFilter.join(",") : "all"
+    }
+
+    getLanguagesFilter() {
+        return this.config.languagesFilter;
+    }
 }
 
+const languagesFilterStr = localStorage.getItem("languagesFilter");
+let languagesFilter =  null;
+if (languagesFilterStr)
+    languagesFilter = languagesFilterStr.split(",");
 
 const client = new SnipplerClient({
     baseUrl: 'http://localhost:8080',
-    clientKey: 'vEysoE5HxX_rRADv1BDJ_v19KoKun6x49p4rq3ZYVxxTtYFc9r-beDh--a1Y8E5GbCpOKEHgJhCvsrnrtbFRomI8TNRNEyStBzUe6UUtgc9gsKBV8bDf6O71j6mk_WA-nYrD-AHHIhf3RI8rls7vNHmQLyPHxA2CDEjiDEkMhYA'
+    clientKey: 'vEysoE5HxX_rRADv1BDJ_v19KoKun6x49p4rq3ZYVxxTtYFc9r-beDh--a1Y8E5GbCpOKEHgJhCvsrnrtbFRomI8TNRNEyStBzUe6UUtgc9gsKBV8bDf6O71j6mk_WA-nYrD-AHHIhf3RI8rls7vNHmQLyPHxA2CDEjiDEkMhYA',
+    languagesFilter: languagesFilter
 });
 
 
