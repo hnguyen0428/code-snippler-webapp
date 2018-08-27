@@ -12,6 +12,7 @@ import {overridePath} from "../../../redux/actions/routerActions";
 
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
 
 import 'brace/mode/java';
 import 'brace/mode/c_cpp';
@@ -72,19 +73,32 @@ class SnippetDetailsPage extends Component {
             let date = new Date(snippet.createdDate);
             date = moment(date).format("dddd MMMM Do, YYYY");
 
+            let updatedDate = null;
+            if (snippet.updatedDate) {
+                updatedDate = new Date(snippet.updatedDate);
+                updatedDate = moment(updatedDate).format("dddd MMMM Do, YYYY");
+            }
+
             return (
                 <div style={styles.rootCtn}>
                     <div style={styles.contentCtn}>
-                        { snippet.userId === this.props.auth.currentUser.userId &&
+                        { this.props.auth.loggedIn && snippet.userId === this.props.auth.currentUser.userId &&
                             <IconButton style={styles.editButton} onClick={this.onClickEdit}>
                                 <Edit/>
                             </IconButton>
                         }
 
-                        <h3 style={styles.header}>Created by: {username} on {date}</h3>
-                        <h3 style={styles.header}>{snippet.title}</h3>
+                        <InputLabel style={styles.header}>Created by: {username} on {date}</InputLabel>
+                        {updatedDate &&
+                            <div>
+                                <br/>
+                                <InputLabel style={styles.header}>Updated on: {updatedDate}</InputLabel>
+                            </div>
+                        }
+                        <br/>
+                        <InputLabel style={styles.header}>{snippet.title}</InputLabel>
                         <hr/>
-                        <p style={styles.description}>{snippet.description}</p>
+                        <InputLabel style={styles.description}>{snippet.description}</InputLabel>
                         <AceEditor
                             id="ace-editor"
                             mode={languagesMap[snippet.languageName.toLowerCase()]}
