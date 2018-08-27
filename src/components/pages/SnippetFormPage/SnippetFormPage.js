@@ -59,17 +59,9 @@ class SnippetFormPage extends Component {
         if (snippetId !== null) {
             let snippet = this.props.snippets.byIds[snippetId];
             if (snippet) {
-                this.setState({
-                    title: {...this.state.title, value: snippet.title},
-                    description: {...this.state.description, value: snippet.description},
-                    language: {...this.state.language, value: snippet.languageName},
-                    code: snippet.code,
-                    mode: languagesMap[snippet.languageName.toLowerCase()]
-                });
-            }
-            else {
-                this.props.fetchSnippet(snippetId, {showUserDetails: true}, (res, err) => {
-                    let snippet = res.data;
+                if (this.props.auth.currentUser.userId !== snippet.userId)
+                    history.push('/');
+                else
                     this.setState({
                         title: {...this.state.title, value: snippet.title},
                         description: {...this.state.description, value: snippet.description},
@@ -77,6 +69,20 @@ class SnippetFormPage extends Component {
                         code: snippet.code,
                         mode: languagesMap[snippet.languageName.toLowerCase()]
                     });
+            }
+            else {
+                this.props.fetchSnippet(snippetId, {showUserDetails: true}, (res, err) => {
+                    let snippet = res.data;
+                    if (this.props.auth.currentUser.userId !== snippet.userId)
+                        history.push('/');
+                    else
+                        this.setState({
+                            title: {...this.state.title, value: snippet.title},
+                            description: {...this.state.description, value: snippet.description},
+                            language: {...this.state.language, value: snippet.languageName},
+                            code: snippet.code,
+                            mode: languagesMap[snippet.languageName.toLowerCase()]
+                        });
                 });
             }
         }

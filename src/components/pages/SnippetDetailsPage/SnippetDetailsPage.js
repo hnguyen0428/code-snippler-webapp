@@ -75,9 +75,11 @@ class SnippetDetailsPage extends Component {
             return (
                 <div style={styles.rootCtn}>
                     <div style={styles.contentCtn}>
-                        <IconButton style={styles.editButton} onClick={this.onClickEdit}>
-                            <Edit/>
-                        </IconButton>
+                        { snippet.userId === this.props.auth.currentUser.userId &&
+                            <IconButton style={styles.editButton} onClick={this.onClickEdit}>
+                                <Edit/>
+                            </IconButton>
+                        }
 
                         <h3 style={styles.header}>Created by: {username} on {date}</h3>
                         <h3 style={styles.header}>{snippet.title}</h3>
@@ -106,6 +108,7 @@ class SnippetDetailsPage extends Component {
 
 function mapStateToProps(state) {
     return {
+        auth: state.auth,
         snippets: state.snippets,
         users: state.users
     };
