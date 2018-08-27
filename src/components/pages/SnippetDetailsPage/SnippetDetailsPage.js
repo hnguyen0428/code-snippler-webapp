@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import history from '../../../root/history';
 
 import AceEditor from 'react-ace';
 
 import {styles} from './styles';
 
 import {fetchSnippet, resetShouldIncreaseView} from "../../../redux/actions/snippetActions";
+import {overridePath} from "../../../redux/actions/routerActions";
+
+import Edit from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
 
 import 'brace/mode/java';
 import 'brace/mode/c_cpp';
@@ -49,6 +54,12 @@ class SnippetDetailsPage extends Component {
     }
 
 
+    onClickEdit = () => {
+        this.props.overridePath(this.props.location.pathname);
+        history.push('/snippet?snippetId=' + this.props.match.params.snippetId);
+    };
+
+
     render() {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
@@ -64,6 +75,10 @@ class SnippetDetailsPage extends Component {
             return (
                 <div style={styles.rootCtn}>
                     <div style={styles.contentCtn}>
+                        <IconButton style={styles.editButton} onClick={this.onClickEdit}>
+                            <Edit/>
+                        </IconButton>
+
                         <h3 style={styles.header}>Created by: {username} on {date}</h3>
                         <h3 style={styles.header}>{snippet.title}</h3>
                         <hr/>
@@ -97,4 +112,10 @@ function mapStateToProps(state) {
 }
 
 
-export default withRouter(connect(mapStateToProps, {fetchSnippet, resetShouldIncreaseView})(SnippetDetailsPage));
+export default withRouter(connect(mapStateToProps,
+    {
+        fetchSnippet,
+        resetShouldIncreaseView,
+        overridePath
+    }
+)(SnippetDetailsPage));

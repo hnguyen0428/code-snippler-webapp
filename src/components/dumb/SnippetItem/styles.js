@@ -4,7 +4,7 @@ export const styles = {
         flexDirection: 'row',
     },
     leftCtn: {
-        flex: '1.5',
+        flex: '1',
         flexShrink: '1',
         flexBasis: '0',
         display: 'flex',
@@ -37,7 +37,7 @@ export const styles = {
         fontSize: '12px',
         marginRight: '10px',
         height: '20px',
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     arrowBack: {
 

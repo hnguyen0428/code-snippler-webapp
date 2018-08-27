@@ -90,11 +90,9 @@ class SnippetItem extends Component {
         return (
             <Paper style={rootCtn}>
                 <div style={styles.leftCtn}>
-                    <Button style={styles.language}>
-                        <ArrowBackIos style={styles.arrowBack}/>
+                    <InputLabel style={styles.language}>
                         {snippet.languageName}
-                        <ArrowForwardIos style={styles.arrowForward}/>
-                    </Button>
+                    </InputLabel>
                 </div>
 
                 <div style={styles.middleCtn}>

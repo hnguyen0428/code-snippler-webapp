@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import TextField from '@material-ui/core/TextField';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -15,14 +16,17 @@ import history from '../../../root/history';
 
 import {supportedLanguages, languagesMap} from '../../../constants/languages';
 import {writeAceConfig as aceConfig, editorTheme} from '../../../constants/AceConfig';
-import {createSnippet} from '../../../redux/actions/snippetActions';
+import {createSnippet, updateSnippet, fetchSnippet} from '../../../redux/actions/snippetActions';
 import {showAlert, showBinaryAlert, closeBinaryAlert} from '../../../redux/actions/alertActions';
 import {resetOverridePath} from '../../../redux/actions/routerActions';
 
 
-class CreateSnippetPage extends Component {
+class SnippetFormPage extends Component {
     constructor(props) {
         super(props);
+
+        const params = new URLSearchParams(this.props.location.search);
+        let snippetId = params.get('snippetId');
 
         this.state = {
             language: {
@@ -41,8 +45,41 @@ class CreateSnippetPage extends Component {
                 value: '',
                 error: false,
                 errorMsg: ''
-            }
+            },
+            updating: snippetId !== null,
+            snippetId: snippetId
         };
+    }
+
+
+    componentWillMount() {
+        const params = new URLSearchParams(this.props.location.search);
+        let snippetId = params.get('snippetId');
+
+        if (snippetId !== null) {
+            let snippet = this.props.snippets.byIds[snippetId];
+            if (snippet) {
+                this.setState({
+                    title: {...this.state.title, value: snippet.title},
+                    description: {...this.state.description, value: snippet.description},
+                    language: {...this.state.language, value: snippet.languageName},
+                    code: snippet.code,
+                    mode: languagesMap[snippet.languageName.toLowerCase()]
+                });
+            }
+            else {
+                this.props.fetchSnippet(snippetId, {showUserDetails: true}, (res, err) => {
+                    let snippet = res.data;
+                    this.setState({
+                        title: {...this.state.title, value: snippet.title},
+                        description: {...this.state.description, value: snippet.description},
+                        language: {...this.state.language, value: snippet.languageName},
+                        code: snippet.code,
+                        mode: languagesMap[snippet.languageName.toLowerCase()]
+                    });
+                });
+            }
+        }
     }
 
 
@@ -73,7 +110,7 @@ class CreateSnippetPage extends Component {
     };
 
 
-    onClickPost = () => {
+    onClickSubmit = () => {
         let passed = this.sanityCheck();
         if (!passed)
             return;
@@ -85,24 +122,34 @@ class CreateSnippetPage extends Component {
             code: this.state.code
         };
 
-        const createSnippetAction = () => {
-            this.props.createSnippet(params, (res, err) => {
-                if (res) {
-                    let prevPath = this.props.router.prevPath;
-                    let overridePath = this.props.router.overridePath;
-                    if (overridePath)
-                        history.push(overridePath);
-                    else
-                        history.push(prevPath);
+        const resCallback = (res, err) => {
+            if (res) {
+                let prevPath = this.props.router.prevPath;
+                let overridePath = this.props.router.overridePath;
+                if (overridePath)
+                    history.push(overridePath);
+                else
+                    history.push(prevPath);
 
-                    this.props.resetOverridePath();
-                    this.props.closeBinaryAlert();
-                }
-            });
+                this.props.resetOverridePath();
+                this.props.closeBinaryAlert();
+            }
         };
-        const action = {callback: createSnippetAction};
 
-        this.props.showBinaryAlert('Post?', 'Do you want to post this snippet?', null, action);
+        const createSnippetAction = () => {
+            this.props.createSnippet(params, resCallback);
+        };
+
+        const updateSnippetAction = () => {
+            this.props.updateSnippet(this.state.snippetId, params, resCallback);
+        };
+
+        const action = this.state.updating ? {callback: updateSnippetAction} : {callback: createSnippetAction};
+        const title = this.state.updating ? 'Update?' : 'Post?';
+        const message = this.state.updating ? 'Do you want to update this snippet?' :
+            'Do you want to post this snippet';
+
+        this.props.showBinaryAlert(title, message, null, action);
     };
 
 
@@ -233,9 +280,9 @@ class CreateSnippetPage extends Component {
                         style={styles.postBtn}
                         variant="raised"
                         color="primary"
-                        onClick={this.onClickPost}
+                        onClick={this.onClickSubmit}
                     >
-                        Post
+                        {this.state.updating ? "Update" : "Post"}
                     </Button>
                 </div>
             </div>
@@ -253,10 +300,12 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
     createSnippet,
     showAlert,
     showBinaryAlert,
     resetOverridePath,
-    closeBinaryAlert
-})(CreateSnippetPage);
+    closeBinaryAlert,
+    updateSnippet,
+    fetchSnippet
+})(SnippetFormPage));

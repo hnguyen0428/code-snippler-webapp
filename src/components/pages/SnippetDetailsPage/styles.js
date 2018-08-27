@@ -12,9 +12,12 @@ export const styles = {
         height: '100%',
         backgroundColor: theme.backgroundColor
     },
+    editButton: {
+        alignSelf: 'flex-end',
+    },
     contentCtn: {
         height: '800px',
-        width: '1000px'
+        width: '1000px',
     },
     header: {
         fontSize: '20px',
