@@ -71,7 +71,7 @@ class SnipplerClient {
 }
 
 const languagesFilterStr = localStorage.getItem("languagesFilter");
-let languagesFilter =  null;
+let languagesFilter = null;
 if (languagesFilterStr)
     languagesFilter = languagesFilterStr.split(",");
 

@@ -13,6 +13,7 @@ import {overridePath} from "../../../redux/actions/routerActions";
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
+import PermIdentity from '@material-ui/icons/PermIdentity';
 
 import 'brace/mode/java';
 import 'brace/mode/c_cpp';
@@ -61,6 +62,11 @@ class SnippetDetailsPage extends Component {
     };
 
 
+    onClickUsername = () => {
+
+    };
+
+
     render() {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
@@ -71,12 +77,12 @@ class SnippetDetailsPage extends Component {
             let username = user ? user.username : '';
 
             let date = new Date(snippet.createdDate);
-            date = moment(date).format("dddd MMMM Do, YYYY");
+            date = moment(date).format("MMMM Do, YYYY");
 
             let updatedDate = null;
             if (snippet.updatedDate) {
                 updatedDate = new Date(snippet.updatedDate);
-                updatedDate = moment(updatedDate).format("dddd MMMM Do, YYYY");
+                updatedDate = moment(updatedDate).format("MMMM Do, YYYY");
             }
 
             return (
@@ -88,17 +94,29 @@ class SnippetDetailsPage extends Component {
                             </IconButton>
                         }
 
-                        <InputLabel style={styles.header}>Created by: {username} on {date}</InputLabel>
-                        {updatedDate &&
+                        <div style={styles.metadataCtn}>
                             <div>
-                                <br/>
-                                <InputLabel style={styles.header}>Updated on: {updatedDate}</InputLabel>
+                                <IconButton onClick={this.onClickUsername}>
+                                    <PermIdentity/>
+                                </IconButton>
+                                <InputLabel onClick={this.onClickUsername}
+                                            style={styles.username}>
+                                    {username}
+                                </InputLabel>
                             </div>
-                        }
-                        <br/>
-                        <InputLabel style={styles.header}>{snippet.title}</InputLabel>
-                        <hr/>
-                        <InputLabel style={styles.description}>{snippet.description}</InputLabel>
+
+                            { updatedDate &&
+                            <InputLabel style={styles.dateLabel}>
+                                {date + '\n' + 'Updated: ' + updatedDate }
+                            </InputLabel>
+                            }
+                            <br/>
+                            <InputLabel style={styles.header}>{snippet.title}</InputLabel>
+
+                            <div style={styles.descriptionCtn}>
+                                <InputLabel style={styles.description}>{snippet.description}</InputLabel>
+                            </div>
+                        </div>
                         <AceEditor
                             id="ace-editor"
                             mode={languagesMap[snippet.languageName.toLowerCase()]}

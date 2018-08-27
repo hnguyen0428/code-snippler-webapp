@@ -16,12 +16,30 @@ export const styles = {
         alignSelf: 'flex-end',
     },
     contentCtn: {
-        height: '800px',
-        width: '1000px',
+        width: '800px',
+    },
+    username: {
+        cursor: 'pointer'
+    },
+    dateLabel: {
+        fontSize: '12px',
+        whiteSpace: 'pre-line',
+        lineHeight: '1.5em'
+    },
+    metadataCtn: {
+        display: 'flex',
+        flexDirection: 'column'
     },
     header: {
-        fontSize: '20px',
-        fontFamily: 'Lucida Grande, Sans Serif'
+        fontSize: '38px',
+        fontFamily: 'Lucida Grande, Sans Serif',
+        fontWeight: '300'
+    },
+    descriptionCtn: {
+        width: '85%',
+        alignSelf: 'center',
+        marginTop: '15px',
+        marginBottom: '30px'
     },
     description: {
         fontSize: '15px',

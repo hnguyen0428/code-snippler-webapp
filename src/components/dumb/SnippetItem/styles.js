@@ -30,7 +30,8 @@ export const styles = {
         fontSize: '15px',
         cursor: 'pointer',
         color: 'rgb(0, 0, 0, 0.54)',
-        lineHeight: '1.3em'
+        lineHeight: '1.3em',
+        whiteSpace: 'pre-line'
     },
     language: {
         fontFamily: 'inherit',
