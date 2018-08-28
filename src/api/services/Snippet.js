@@ -105,7 +105,7 @@ export default class Snippet extends SnipplerService {
 
 
     getSnippets(snippetIds, params, callback) {
-        params = {...snippetIds, ...params};
+        params = {ids: snippetIds.join(","), ...params};
 
         let config = {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.getSnippets.value),

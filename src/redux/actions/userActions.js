@@ -30,16 +30,26 @@ export const fetchUser = (userId, params, callback, noResCB) => dispatch => {
         let success = handleActionsResult(res, error, callback, noResCB);
         if (success) {
             let userData = res.data;
-            dispatch({
-                type: FETCH_USER,
-                payload: userData
-            });
-            // If showSnippetDetails then dispatch the snippets data too
+
             if (params && params.showSnippetDetails) {
                 let snippets = {...userData.createdSnippets, ...userData.savedSnippets};
                 dispatch({
                     type: FETCH_SNIPPETS,
                     payload: snippets
+                });
+
+                // Make sure that user's createdSnippets and savedSnippets only contain IDs
+                userData.createdSnippets = userData.createdSnippets.map(snippet => {return snippet.snippetId;});
+                userData.savedSnippets = userData.savedSnippets.map(snippet => {return snippet.snippetId;});
+                dispatch({
+                    type: FETCH_USER,
+                    payload: userData
+                });
+            }
+            else {
+                dispatch({
+                    type: FETCH_USER,
+                    payload: userData
                 });
             }
         }

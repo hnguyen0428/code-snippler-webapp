@@ -15,23 +15,21 @@ import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import PermIdentity from '@material-ui/icons/PermIdentity';
+import Avatar from '@material-ui/core/Avatar';
 
-import 'brace/mode/java';
-import 'brace/mode/c_cpp';
-import 'brace/mode/javascript';
-import 'brace/mode/python';
-import 'brace/mode/css';
-import 'brace/mode/html';
-import 'brace/mode/php';
-import 'brace/mode/ruby';
-import 'brace/mode/swift';
-import 'brace/mode/jsx';
+import {languagesMap} from '../../../constants/languages';
+
 import 'brace/theme/github';
 import 'brace/theme/xcode';
 import 'brace/theme/tomorrow';
 
-import {languagesMap} from '../../../constants/languages';
+
 import {readAceConfig as aceConfig, editorTheme} from '../../../constants/AceConfig';
+
+for (let language in languagesMap) {
+    let mode = languagesMap[language];
+    require(`brace/mode/${mode}`);
+}
 
 const moment = require('moment');
 
@@ -64,7 +62,13 @@ class SnippetDetailsPage extends Component {
 
 
     onClickUsername = () => {
+        let snippetId = this.props.match.params.snippetId;
+        let snippet = this.props.snippets.byIds[snippetId];
 
+        if (snippet.userId === this.props.auth.currentUser.userId)
+            history.push('/user/me');
+        else
+            history.push('/user/' + snippet.userId);
     };
 
 
@@ -93,7 +97,9 @@ class SnippetDetailsPage extends Component {
                             <div style={styles.actionsCtn}>
                                 <div style={styles.usernameCtn}>
                                     <IconButton style={styles.profileIcon} onClick={this.onClickUsername}>
-                                        <PermIdentity/>
+                                        <Avatar>
+                                            {username.substr(0, 1).toUpperCase()}
+                                        </Avatar>
                                     </IconButton>
                                     <InputLabel onClick={this.onClickUsername}
                                                 style={styles.username}>
@@ -113,6 +119,14 @@ class SnippetDetailsPage extends Component {
                                 }
                             </div>
 
+                            <br/>
+
+                            <InputLabel style={styles.header}>{snippet.title}</InputLabel>
+
+                            <div style={styles.descriptionCtn}>
+                                <InputLabel style={styles.description}>{snippet.description}</InputLabel>
+                            </div>
+
                             <div style={styles.dateCtn}>
                                 { date &&
                                 <InputLabel style={styles.dateLabel}>
@@ -125,12 +139,7 @@ class SnippetDetailsPage extends Component {
                                 </InputLabel>
                                 }
                             </div>
-                            <br/>
-                            <InputLabel style={styles.header}>{snippet.title}</InputLabel>
 
-                            <div style={styles.descriptionCtn}>
-                                <InputLabel style={styles.description}>{snippet.description}</InputLabel>
-                            </div>
                         </div>
                         <AceEditor
                             id="ace-editor"
@@ -148,7 +157,7 @@ class SnippetDetailsPage extends Component {
                 </div>
             );
         }
-        return null;
+        return <div/>;
     }
 }
 

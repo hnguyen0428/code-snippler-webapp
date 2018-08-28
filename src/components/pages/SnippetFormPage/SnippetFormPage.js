@@ -20,6 +20,11 @@ import {createSnippet, updateSnippet, fetchSnippet} from '../../../redux/actions
 import {showAlert, showBinaryAlert, closeBinaryAlert} from '../../../redux/actions/alertActions';
 import {resetOverridePath} from '../../../redux/actions/routerActions';
 
+for (let language in languagesMap) {
+    let mode = languagesMap[language];
+    require(`brace/mode/${mode}`);
+}
+
 
 class SnippetFormPage extends Component {
     TITLE_LIMIT = 256;
@@ -164,12 +169,14 @@ class SnippetFormPage extends Component {
             this.props.updateSnippet(this.state.snippetId, params, resCallback);
         };
 
-        const action = this.state.updating ? {callback: updateSnippetAction} : {callback: createSnippetAction};
-        const title = this.state.updating ? 'Update?' : 'Post?';
-        const message = this.state.updating ? 'Do you want to update this snippet?' :
-            'Do you want to post this snippet';
+        const action = {callback: createSnippetAction};
+        const title = 'Post?';
+        const message = 'Do you want to post this snippet';
 
-        this.props.showBinaryAlert(title, message, null, action);
+        if (this.state.updating)
+            updateSnippetAction();
+        else
+            this.props.showBinaryAlert(title, message, null, action);
     };
 
 

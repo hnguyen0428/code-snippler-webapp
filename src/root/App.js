@@ -42,6 +42,7 @@ import LoginPage from '../components/pages/LoginPage/LoginPage';
 import SnippetDetailsPage from '../components/pages/SnippetDetailsPage/SnippetDetailsPage';
 import HomePage from '../components/pages/HomePage/HomePage';
 import SearchPage from '../components/pages/SearchPage/SearchPage';
+import ProfilePage from '../components/pages/ProfilePage/ProfilePage';
 
 import SnipplerConfig from '../constants/SnipplerConfig';
 import {supportedLanguages} from '../constants/languages';
@@ -148,6 +149,12 @@ class App extends Component {
         }
 
         this.setState({ open: false });
+    };
+
+
+    handleProfileClick = event => {
+        this.setState({ open: false });
+        history.push('/user/me');
     };
 
 
@@ -316,7 +323,7 @@ class App extends Component {
                                                 {this.props.auth.loggedIn ? (
                                                     <MenuList>
                                                         <MenuItem style={styles.usernameMenuItem}
-                                                                  onClick={this.handleClose}>
+                                                                  onClick={this.handleProfileClick}>
                                                             {this.props.auth.currentUser.username}
                                                         </MenuItem>
                                                         <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
@@ -342,6 +349,7 @@ class App extends Component {
                         <Route exact path="/login" component={LoginPage}/>
                         <Route exact path="/snippet/:snippetId" component={SnippetDetailsPage}/>
                         <Route exact path="/search" component={SearchPage}/>
+                        <Route exact path="/user/:userId" component={ProfilePage}/>
                     </Switch>
                 </Router>
             </div>

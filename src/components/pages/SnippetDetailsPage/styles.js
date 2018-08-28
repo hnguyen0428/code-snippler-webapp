@@ -26,7 +26,7 @@ export const styles = {
         height: '40px'
     },
     profileIcon: {
-        height: '100%'
+        marginRight: '5px'
     },
     username: {
         cursor: 'pointer',
@@ -60,7 +60,7 @@ export const styles = {
         fontFamily: 'Lucida Grande, Sans Serif'
     },
     editor: {
-        height: '600px',
+        height: '650px',
         width: 'inherit'
     }
 };
