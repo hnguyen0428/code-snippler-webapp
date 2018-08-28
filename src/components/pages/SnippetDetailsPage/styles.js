@@ -13,31 +13,45 @@ export const styles = {
         backgroundColor: theme.backgroundColor
     },
     editButton: {
-        alignSelf: 'flex-end',
+
     },
     contentCtn: {
         width: '800px',
     },
+    actionsCtn: {
+        flexDirection: 'row',
+        display: 'flex'
+    },
+    usernameCtn: {
+        height: '40px'
+    },
+    profileIcon: {
+        height: '100%'
+    },
     username: {
-        cursor: 'pointer'
+        cursor: 'pointer',
+        height: '100%'
+    },
+    dateCtn: {
+        display: 'flex',
+        flexDirection: 'column'
     },
     dateLabel: {
         fontSize: '12px',
         whiteSpace: 'pre-line',
-        lineHeight: '1.5em'
+        lineHeight: '1.5em',
     },
     metadataCtn: {
-        display: 'flex',
-        flexDirection: 'column'
+
     },
     header: {
-        fontSize: '38px',
+        fontSize: '34px',
         fontFamily: 'Lucida Grande, Sans Serif',
         fontWeight: '300'
     },
     descriptionCtn: {
         width: '85%',
-        alignSelf: 'center',
+        paddingLeft: '40px',
         marginTop: '15px',
         marginBottom: '30px'
     },

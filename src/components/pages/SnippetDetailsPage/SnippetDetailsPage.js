@@ -13,6 +13,7 @@ import {overridePath} from "../../../redux/actions/routerActions";
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
+import Toolbar from '@material-ui/core/Toolbar';
 import PermIdentity from '@material-ui/icons/PermIdentity';
 
 import 'brace/mode/java';
@@ -88,28 +89,42 @@ class SnippetDetailsPage extends Component {
             return (
                 <div style={styles.rootCtn}>
                     <div style={styles.contentCtn}>
-                        { this.props.auth.loggedIn && snippet.userId === this.props.auth.currentUser.userId &&
-                            <IconButton style={styles.editButton} onClick={this.onClickEdit}>
-                                <Edit/>
-                            </IconButton>
-                        }
-
                         <div style={styles.metadataCtn}>
-                            <div>
-                                <IconButton onClick={this.onClickUsername}>
-                                    <PermIdentity/>
-                                </IconButton>
-                                <InputLabel onClick={this.onClickUsername}
-                                            style={styles.username}>
-                                    {username}
-                                </InputLabel>
+                            <div style={styles.actionsCtn}>
+                                <div style={styles.usernameCtn}>
+                                    <IconButton style={styles.profileIcon} onClick={this.onClickUsername}>
+                                        <PermIdentity/>
+                                    </IconButton>
+                                    <InputLabel onClick={this.onClickUsername}
+                                                style={styles.username}>
+                                        {username}
+                                    </InputLabel>
+                                </div>
+
+                                {/* Space in between */}
+                                <div style={{flex: '1'}}/>
+
+                                { this.props.auth.loggedIn && snippet.userId === this.props.auth.currentUser.userId &&
+                                    <div style={styles.editButton}>
+                                        <IconButton onClick={this.onClickEdit}>
+                                            <Edit/>
+                                        </IconButton>
+                                    </div>
+                                }
                             </div>
 
-                            { updatedDate &&
-                            <InputLabel style={styles.dateLabel}>
-                                {date + '\n' + 'Updated: ' + updatedDate }
-                            </InputLabel>
-                            }
+                            <div style={styles.dateCtn}>
+                                { date &&
+                                <InputLabel style={styles.dateLabel}>
+                                    {date}
+                                </InputLabel>
+                                }
+                                { updatedDate &&
+                                <InputLabel style={styles.dateLabel}>
+                                    Updated on: {updatedDate}
+                                </InputLabel>
+                                }
+                            </div>
                             <br/>
                             <InputLabel style={styles.header}>{snippet.title}</InputLabel>
 

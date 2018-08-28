@@ -38,7 +38,7 @@ export const styles = {
     },
     filterDrawer: {
         backgroundColor: '#313133',
-        height: '100%'
+        height: 'auto'
     },
     filterHelpText: {
         maxWidth: '200px',

@@ -22,6 +22,11 @@ import {resetOverridePath} from '../../../redux/actions/routerActions';
 
 
 class SnippetFormPage extends Component {
+    TITLE_LIMIT = 256;
+    DESC_LIMIT = 3000;
+    CODE_LIMIT = 8000;
+
+
     constructor(props) {
         super(props);
 
@@ -44,7 +49,7 @@ class SnippetFormPage extends Component {
             description: {
                 value: '',
                 error: false,
-                errorMsg: ''
+                errorMsg: '',
             },
             updating: snippetId !== null,
             snippetId: snippetId
@@ -110,6 +115,15 @@ class SnippetFormPage extends Component {
 
 
     onEditingForm = (event) => {
+        switch (event.target.name) {
+            case "title":
+                if (event.target.value.length > this.TITLE_LIMIT)
+                    return;
+            case "description":
+                if (event.target.value.length > this.DESC_LIMIT)
+                    return;
+        }
+
         this.setState({
             [event.target.name]: {...this.state[event.target.name], value: event.target.value}
         });
@@ -188,6 +202,13 @@ class SnippetFormPage extends Component {
             passed = false;
         }
 
+        if (this.state.code.length > this.CODE_LIMIT) {
+            if (passed) {
+                this.props.showAlert('Error', 'Code contains more characters than ' + this.CODE_LIMIT);
+            }
+            passed = false;
+        }
+
         if (!passed)
             this.setState(errors);
         else
@@ -230,6 +251,9 @@ class SnippetFormPage extends Component {
                         />
                         {this.state.title.error
                         && <FormHelperText>{this.state.title.errorMsg}</FormHelperText>}
+                        <FormHelperText error={this.state.title.value.length > this.TITLE_LIMIT}>
+                            {this.state.title.value.length}/{this.TITLE_LIMIT}
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl error={this.state.description.error} style={styles.textField}>
@@ -245,6 +269,9 @@ class SnippetFormPage extends Component {
                         />
                         {this.state.description.error &&
                         <FormHelperText>{this.state.description.errorMsg}</FormHelperText>}
+                        <FormHelperText error={this.state.description.value.length > this.DESC_LIMIT}>
+                            {this.state.description.value.length}/{this.DESC_LIMIT}
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl error={this.state.language.error} style={styles.textField}>
@@ -281,6 +308,9 @@ class SnippetFormPage extends Component {
                         onChange={this.onCodeEditing}
                         onValidate={this.onEditorValidate}
                     />
+                    <FormHelperText error={this.state.code.length > this.CODE_LIMIT} style={styles.aceEditorCharCount}>
+                        {this.state.code.length}/{this.CODE_LIMIT}
+                    </FormHelperText>
 
                     <Button
                         style={styles.postBtn}

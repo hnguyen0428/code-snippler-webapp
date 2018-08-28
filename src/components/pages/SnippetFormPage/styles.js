@@ -26,6 +26,9 @@ export const styles = {
         marginTop: '20px',
         marginBottom: '20px'
     },
+    aceEditorCharCount: {
+        alignSelf: 'flex-end'
+    },
     postBtn: {
         marginTop: '20px'
     }
