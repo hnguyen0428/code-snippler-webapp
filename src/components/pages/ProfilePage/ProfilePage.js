@@ -9,6 +9,7 @@ import {withStyles} from '@material-ui/core'
 
 import Paginator from '../../dumb/Paginator/Paginator';
 import SnippetsList from '../../dumb/SnippetsList/SnippetsList';
+import SearchBar from '../../dumb/SearchBar/SearchBar';
 
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs';
@@ -43,20 +44,22 @@ class ProfilePage extends Component {
         super(props);
 
         this.state = {
-            tabValue: this.CREATED_SNIPPETS_INDEX
+            tabValue: this.CREATED_SNIPPETS_INDEX,
+            searchQuery: ''
         };
     }
 
 
     componentWillMount() {
-        if (!this.props.auth.loggedIn) {
-            history.push('/');
-            return;
-        }
-
         let userId = this.props.match.params.userId;
-        if (userId === 'me')
+        if (userId === 'me') {
+            if (!this.props.auth.loggedIn) {
+                history.push('/');
+                return;
+            }
+
             this.props.fetchMe();
+        }
         else
             this.props.fetchUser(userId);
 
@@ -104,8 +107,35 @@ class ProfilePage extends Component {
     };
 
 
+    onSearchBarChange = (event) => {
+        this.setState({searchQuery: event.target.value});
+    };
+
+
+    filterByQuery = (snippets, query) => {
+        // Trim beginning and end white spaces
+        query = query.replace(/^\s+/g, '');
+        query = query.replace(/\s+$/g, '');
+
+        query = query.split(' ');
+        let regexStr = query.join('|');
+        console.log(regexStr);
+        let regex = new RegExp(regexStr, 'i');
+
+        let results = [];
+        snippets.forEach(snippet => {
+            if (regex.test(snippet.title))
+                results.push(snippet);
+            else if (snippet.description && regex.test(snippet.description))
+                results.push(snippet);
+        });
+
+        return results;
+    };
+
+
     render() {
-        if (!this.props.auth.loggedIn) {
+        if (this.props.match.params.userId === 'me' && !this.props.auth.loggedIn) {
             return <div/>;
         }
 
@@ -139,6 +169,9 @@ class ProfilePage extends Component {
                 });
             }
 
+            if (this.state.searchQuery !== '')
+                snippets = this.filterByQuery(snippets, this.state.searchQuery);
+
 
             return (
                 <div style={styles.rootCtn}>
@@ -171,6 +204,14 @@ class ProfilePage extends Component {
                             <Tab label={isMe ? 'Snippets You Saved' : 'Snippets They Saved'}
                                  classes={{label: classes.tabLabel}}/>
                         </Tabs>
+
+                        <SearchBar
+                            color="black"
+                            style={styles.searchBar}
+                            onChange={this.onSearchBarChange}
+                            value={this.state.searchQuery}
+                        />
+                        <hr style={theme.hrLine}/>
 
                         <SnippetsList style={styles.snippetsCtn} snippets={snippets}/>
                     </div>

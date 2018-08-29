@@ -65,7 +65,7 @@ class SnippetDetailsPage extends Component {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
 
-        if (snippet.userId === this.props.auth.currentUser.userId)
+        if (this.props.auth.loggedIn && snippet.userId === this.props.auth.currentUser.userId)
             history.push('/user/me');
         else
             history.push('/user/' + snippet.userId);

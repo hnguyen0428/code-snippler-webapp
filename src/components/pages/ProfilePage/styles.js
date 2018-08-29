@@ -29,6 +29,9 @@ export const styles = {
     },
     snippetsCtn: {
         width: '100%'
+    },
+    searchBar: {
+        marginTop: '10px',
     }
 };
 

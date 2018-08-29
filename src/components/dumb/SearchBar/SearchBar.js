@@ -22,7 +22,7 @@ class SearchBar extends Component {
                             <Search/>
                         </IconButton>
                     }
-                    disableUnderline
+                    disableUnderline={this.props.disableUnderline}
                     placeholder="Search for snippets"
                     style={{color: this.props.color}}
                     fullWidth={this.props.fullWidth}
@@ -43,12 +43,14 @@ SearchBar.propTypes = {
     onChange: PropTypes.func,
     style: PropTypes.object,
     fullWidth: PropTypes.bool,
-    value: PropTypes.string
+    value: PropTypes.string,
+    disableUnderline: PropTypes.bool
 };
 
 SearchBar.defaultProps = {
     color: 'white',
-    fullWidth: true
+    fullWidth: true,
+    disableUnderline: true
 };
 
 
