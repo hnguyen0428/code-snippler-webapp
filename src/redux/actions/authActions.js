@@ -42,6 +42,16 @@ export const register = (username, password, callback, noResCB) => dispatch => {
 };
 
 
+export const changePassword = (currPw, newPw, callback, noResCB) => dispatch => {
+    Snippler.auth().changePassword({
+        currentPassword: currPw,
+        newPassword: newPw,
+    }, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+    });
+};
+
+
 export const logout = () => dispatch => {
     let apiKey = localStorage.getItem('apiKey');
 

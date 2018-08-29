@@ -1,7 +1,11 @@
+import {theme} from '../../../constants/GlobalStyles';
+
+
 export const styles = {
     dialogCtn: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: theme.backgroundColor
     },
     contentCtn: {
         display: 'flex',

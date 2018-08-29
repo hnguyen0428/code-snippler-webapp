@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -11,6 +12,8 @@ import PermIdentity from '@material-ui/icons/PermIdentity';
 import Lock from '@material-ui/icons/Lock';
 import Code from '@material-ui/icons/Code';
 
+import {styles} from './styles';
+
 
 class SettingsDialog extends Component {
     render() {
@@ -18,26 +21,28 @@ class SettingsDialog extends Component {
 
         return (
             <Dialog {...props}>
-                <List>
-                    <ListItem button onClick={this.props.onClickProfile}>
-                        <ListItemIcon>
-                            <PermIdentity/>
-                        </ListItemIcon>
-                        <ListItemText primary="Profile Information"/>
-                    </ListItem>
-                    <ListItem button onClick={this.props.onClickPassword}>
-                        <ListItemIcon>
-                            <Lock/>
-                        </ListItemIcon>
-                        <ListItemText primary="Change Password"/>
-                    </ListItem>
-                    <ListItem button onClick={this.props.onClickEditor}>
-                        <ListItemIcon>
-                            <Code/>
-                        </ListItemIcon>
-                        <ListItemText primary="Code Editor Settings"/>
-                    </ListItem>
-                </List>
+                <div style={styles.dialogContent}>
+                    <List>
+                        <ListItem button onClick={this.props.onClickProfile}>
+                            <ListItemIcon>
+                                <PermIdentity/>
+                            </ListItemIcon>
+                            <ListItemText primary="Profile Information"/>
+                        </ListItem>
+                        <ListItem button onClick={this.props.onClickPassword}>
+                            <ListItemIcon>
+                                <Lock/>
+                            </ListItemIcon>
+                            <ListItemText primary="Change Password"/>
+                        </ListItem>
+                        <ListItem button onClick={this.props.onClickEditor}>
+                            <ListItemIcon>
+                                <Code/>
+                            </ListItemIcon>
+                            <ListItemText primary="Code Editor Settings"/>
+                        </ListItem>
+                    </List>
+                </div>
             </Dialog>
         );
     }

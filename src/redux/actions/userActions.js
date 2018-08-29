@@ -3,6 +3,20 @@ import {FETCH_USER, FETCH_ME, FETCH_SNIPPETS} from './types';
 import {handleActionsResult} from './actions';
 
 
+export const updateProfile = (params, callback, noResCB) => dispatch => {
+    Snippler.user().updateProfile(params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            let userData = res.data;
+            dispatch({
+                type: FETCH_ME,
+                payload: userData
+            });
+        }
+    });
+};
+
+
 export const fetchMe = (params, callback, noResCB) => dispatch => {
     Snippler.user().getMe(params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);

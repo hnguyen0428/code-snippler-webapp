@@ -2,6 +2,10 @@ import SnipplerService from "./SnipplerService";
 
 
 const ENDPOINTS = {
+    updateProfile: {
+        value: '/api/user/profile',
+        method: 'patch'
+    },
     getMe: {
         value: '/api/user/me',
         method: 'get'
@@ -32,6 +36,19 @@ const ENDPOINTS = {
 export default class User extends SnipplerService {
     constructor(config) {
         super(config);
+    }
+
+
+    updateProfile(params, callback) {
+        let config = {
+            url: this.formFullUrl(this.baseUrl, ENDPOINTS.updateProfile.value),
+            method: ENDPOINTS.updateProfile.method,
+            params: params
+        };
+
+        this.request(config, function(response, error) {
+            SnipplerService.handleRequestResult(response, error, callback);
+        });
     }
 
 

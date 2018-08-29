@@ -10,6 +10,10 @@ const ENDPOINTS = {
     login: {
         value: '/api/user/login',
         method: 'post'
+    },
+    changePassword: {
+        value: '/api/user/changePassword',
+        method: 'post'
     }
 };
 
@@ -38,6 +42,19 @@ export default class Auth extends SnipplerService {
             url: this.formFullUrl(this.baseUrl, ENDPOINTS.login.value),
             method: ENDPOINTS.login.method,
             params: authConfig
+        };
+
+        this.request(config, function(response, error) {
+            SnipplerService.handleRequestResult(response, error, callback);
+        });
+    }
+
+
+    changePassword(params, callback) {
+        let config = {
+            url: this.formFullUrl(this.baseUrl, ENDPOINTS.changePassword.value),
+            method: ENDPOINTS.changePassword.method,
+            params: params
         };
 
         this.request(config, function(response, error) {
