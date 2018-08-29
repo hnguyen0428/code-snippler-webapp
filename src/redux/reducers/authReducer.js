@@ -1,4 +1,4 @@
-import {LOGIN, REGISTER, LOGGED_OUT} from '../actions/types';
+import {LOGIN, REGISTER, LOGGED_OUT, FETCH_ME} from '../actions/types';
 import Snippler from '../../api/SnipplerClient';
 
 
@@ -29,6 +29,14 @@ export default function(state = initialState, action) {
                 ...state,
                 currentUser: null,
                 loggedIn: false
+            };
+        case FETCH_ME:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    ...action.payload
+                }
             };
         default:
             return state;

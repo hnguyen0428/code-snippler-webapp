@@ -11,6 +11,9 @@ export const styles = {
         height: 'auto',
         backgroundColor: theme.backgroundColor,
     },
+    profileInfoDialogCtn: {
+        backgroundColor: theme.backgroundColor
+    },
     contentCtn: {
         width: '800px',
         marginBottom: '50px'
@@ -26,7 +29,8 @@ export const styles = {
         height: '100%',
         whiteSpace: 'pre-line',
         lineHeight: '1.4em',
-        fontSize: '15px'
+        fontSize: '15px',
+        cursor: 'pointer'
     },
     actionsCtn: {
         flexDirection: 'row',

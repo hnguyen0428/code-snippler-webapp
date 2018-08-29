@@ -11,6 +11,8 @@ import SnippetsList from '../../dumb/SnippetsList/SnippetsList';
 import SearchBar from '../../dumb/SearchBar/SearchBar';
 import SettingsDialog from '../../dumb/SettingsDialog/SettingsDialog';
 import EditorSettingsDialog from '../../smart/EditorSettingsDialog/EditorSettingsDialog';
+import ChangePasswordForm from '../../smart/ChangePasswordForm/ChangePasswordForm';
+import UpdateProfileForm from '../../smart/UpdateProfileForm/UpdateProfileForm';
 
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs';
@@ -18,7 +20,17 @@ import Tab from '@material-ui/core/Tab';
 import Toolbar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
 import InputLabel from '@material-ui/core/InputLabel';
+import Dialog from '@material-ui/core/Dialog';
+import List from '@material-ui/core/List';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
+import Mail from '@material-ui/icons/Mail';
+import PermContactCalendar from '@material-ui/icons/PermContactCalendar';
+import PermIdentity from '@material-ui/icons/PermIdentity';
+import DateRange from '@material-ui/icons/DateRange';
 import Settings from '@material-ui/icons/Settings';
 
 import {
@@ -52,7 +64,10 @@ class ProfilePage extends Component {
             searchQuery: '',
             page: 0,
             settingsDialogOpen: false,
-            editorSettingsDialogOpen: false
+            editorSettingsDialogOpen: false,
+            changePwFormOpen: false,
+            updateProfileFormOpen: false,
+            profileInfoOpen: false,
         };
     }
 
@@ -160,10 +175,17 @@ class ProfilePage extends Component {
     };
 
 
+    onClickProfileInfo = () => {
+        this.setState({profileInfoOpen: true});
+    };
+
+    closeProfileInfo = () => {
+        this.setState({profileInfoOpen: false});
+    };
+
     onClickSettings = () => {
         this.setState({settingsDialogOpen: true});
     };
-
 
     closeSettingsDialog = () => {
         this.setState({settingsDialogOpen: false});
@@ -174,21 +196,20 @@ class ProfilePage extends Component {
     };
 
     onClickChangePassword = () => {
-
+        this.setState({changePwFormOpen: true});
     };
 
-    onClickProfileInfo = () => {
-
+    onClickUpdateProfileInfo = () => {
+        this.setState({updateProfileFormOpen: true});
     };
 
-    onClickBackDialog = (dialog) => {
-        console.log(dialog.props.name);
-        this.setState({editorSettingsDialogOpen: false});
+    onBackDialog = (dialog) => {
+        this.setState({[dialog.props.name]: false});
     };
 
-    onClickSaveDialog = (dialog) => {
-        console.log(dialog.props.name);
-        this.setState({editorSettingsDialogOpen: false});
+    onSaveDialog = (dialog, success) => {
+        if (success)
+            this.setState({[dialog.props.name]: false});
     };
 
 
@@ -209,6 +230,19 @@ class ProfilePage extends Component {
         const {classes} = this.props;
 
         if (user) {
+            let profile = user.profile;
+            let displayedName = user.username;
+            if (profile) {
+                let nameParts = [];
+                if (profile.firstName)
+                    nameParts.push(profile.firstName);
+                if (profile.lastName)
+                    nameParts.push(profile.lastName);
+
+                if (nameParts.length !== 0)
+                    displayedName = nameParts.join(" ");
+            }
+
             this.querySnippets(this.state.tabValue);
             let date = new Date(user.createdDate);
             date = moment(date).format("MMMM, YYYY");
@@ -241,32 +275,84 @@ class ProfilePage extends Component {
 
             return (
                 <div style={styles.rootCtn}>
+                    <Dialog open={this.state.profileInfoOpen} onBackdropClick={this.closeProfileInfo}>
+                        <div style={styles.profileInfoDialogCtn}>
+                            <List>
+                                <ListSubheader>Profile Information</ListSubheader>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        <PermIdentity/>
+                                    </ListItemIcon>
+                                    <ListItemText primary={user.username}/>
+                                </ListItem>
+                                { displayedName !== user.username &&
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PermContactCalendar/>
+                                        </ListItemIcon>
+                                        <ListItemText primary={displayedName}/>
+                                    </ListItem>
+                                }
+                                { profile && profile.email &&
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <Mail/>
+                                        </ListItemIcon>
+                                        <ListItemText primary={profile.email}/>
+                                    </ListItem>
+                                }
+                                <ListSubheader>Joined in {date}</ListSubheader>
+                            </List>
+                        </div>
+                    </Dialog>
+
                     <SettingsDialog
                         open={this.state.settingsDialogOpen}
                         onBackdropClick={this.closeSettingsDialog}
                         onEscapeKeyDown={this.closeSettingsDialog}
                         onClickEditor={this.onClickEditorSettings}
                         onClickPassword={this.onClickChangePassword}
-                        onClickProfile={this.onClickProfileInfo}
+                        onClickProfile={this.onClickUpdateProfileInfo}
                     />
 
                     <EditorSettingsDialog
-                        name="EditorSettingsDialog"
+                        name="editorSettingsDialogOpen"
                         open={this.state.editorSettingsDialogOpen}
                         maxWidth="md"
-                        onClickBack={this.onClickBackDialog}
-                        onClickSave={this.onClickSaveDialog}
+                        onClickBack={this.onBackDialog}
+                        onClickSave={this.onSaveDialog}
+                        onBackdropClick={this.onBackDialog}
+                    />
+
+                    <ChangePasswordForm
+                        name="changePwFormOpen"
+                        open={this.state.changePwFormOpen}
+                        maxWidth="md"
+                        onClickBack={this.onBackDialog}
+                        onClickSave={this.onSaveDialog}
+                        onBackdropClick={this.onBackDialog}
+                    />
+
+                    <UpdateProfileForm
+                        name="updateProfileFormOpen"
+                        open={this.state.updateProfileFormOpen}
+                        maxWidth="md"
+                        onClickBack={this.onBackDialog}
+                        onClickSave={this.onSaveDialog}
+                        onBackdropClick={this.onBackDialog}
                     />
 
                     <div style={styles.contentCtn}>
                         <div style={styles.actionsCtn}>
                             <div style={styles.usernameCtn}>
                                 <Toolbar>
-                                    <Avatar style={styles.profileIcon}>
-                                        {user.username.substr(0, 1).toUpperCase()}
-                                    </Avatar>
-                                    <InputLabel style={styles.username}>
-                                        {user.username + '\n'}
+                                    <IconButton style={styles.profileIcon} onClick={this.onClickProfileInfo}>
+                                        <Avatar>
+                                            {displayedName.substr(0, 1).toUpperCase()}
+                                        </Avatar>
+                                    </IconButton>
+                                    <InputLabel style={styles.username} onClick={this.onClickProfileInfo}>
+                                        {displayedName + '\n'}
                                         Joined in {date}
                                     </InputLabel>
                                 </Toolbar>

@@ -21,7 +21,7 @@ class SettingsDialog extends Component {
 
         return (
             <Dialog {...props}>
-                <div style={styles.dialogContent}>
+                <div style={styles.dialogCtn}>
                     <List>
                         <ListItem button onClick={this.props.onClickProfile}>
                             <ListItemIcon>

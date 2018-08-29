@@ -55,7 +55,7 @@ class EditorSettingsDialog extends Component {
         setEditorTheme(this.state.theme);
 
         if (this.props.onClickSave)
-            this.props.onClickSave(this);
+            this.props.onClickSave(this, true);
     };
 
 
@@ -65,11 +65,17 @@ class EditorSettingsDialog extends Component {
     };
 
 
+    onBackdropClick = () => {
+        if (this.props.onBackdropClick)
+            this.props.onBackdropClick(this);
+    };
+
+
     render() {
-        let {...props} = this.props;
+        let {onBackdropClick, ...props} = this.props;
 
         return (
-            <Dialog {...props}>
+            <Dialog {...props} onBackdropClick={this.onBackdropClick}>
                 <DialogContent style={styles.dialogCtn}>
                     {this.props.withBackButton &&
                     <IconButton onClick={this.onClickBack}>

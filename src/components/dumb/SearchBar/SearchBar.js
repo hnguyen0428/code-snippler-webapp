@@ -17,7 +17,8 @@ class SearchBar extends Component {
     }
 
     handleSearch = () => {
-        this.props.onClickSearch(this.props.value);
+        if (this.props.onClickSearch)
+            this.props.onClickSearch(this.props.value);
     };
 
     onChange = event => {

@@ -72,4 +72,7 @@ export const styles = {
         margin: '20px 20px 20px 20px',
         color: '#617878'
     },
+    adornment: {
+        color: '#6A6A6A'
+    }
 };

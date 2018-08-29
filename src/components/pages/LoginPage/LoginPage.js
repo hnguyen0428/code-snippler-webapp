@@ -20,6 +20,7 @@ import {styles} from './styles';
 import {login, register} from '../../../redux/actions/authActions';
 import {showAlert, closeAlert} from '../../../redux/actions/alertActions';
 import {resetOverridePath} from '../../../redux/actions/routerActions';
+import Utility from "../../../util/Utility";
 
 
 class LoginPage extends Component {
@@ -123,28 +124,21 @@ class LoginPage extends Component {
     }
 
 
-    withinRange = (str, min, max) => {
-        return str.length >= min && str.length <= max;
-    };
-
-
     registerInputSanityCheck() {
         let errors = [];
-        let regex = new RegExp(/[a-zA-Z0-9_]/);
-        let regexTest = regex.test(this.state.registerUsername);
+        let regexTest = Utility.validateUsername(this.state.registerUsername);
         if (!regexTest)
             errors.push(this.USERNAME_CHAR_INVALID_ERR);
 
-        let rangeTest = this.withinRange(this.state.registerUsername, 6, 20);
+        let rangeTest = Utility.withinRange(this.state.registerUsername, 6, 20);
         if (!rangeTest)
             errors.push(this.USERNAME_LENGTH_ERR);
 
-        regex = new RegExp(/[a-zA-Z0-9]/);
-        regexTest = regex.test(this.state.registerPassword);
+        regexTest = Utility.isAlphanum(this.state.registerPassword);
         if (!regexTest)
             errors.push(this.PASSWORD_CHAR_INVALID_ERR);
 
-        rangeTest = this.withinRange(this.state.registerPassword, 6, 20);
+        rangeTest = Utility.withinRange(this.state.registerPassword, 6, 20);
         if (!rangeTest)
             errors.push(this.PASSWORD_LENGTH_ERR);
 
@@ -174,10 +168,8 @@ class LoginPage extends Component {
                         <div style={styles.formCtn}>
                             <div style={styles.inputCtn}>
                                 <Input style={styles.input} placeholder="Username" startAdornment={
-                                    <InputAdornment position="start">
-                                        <IconButton disabled>
-                                            <PermIdentity/>
-                                        </IconButton>
+                                    <InputAdornment style={styles.adornment} position="start">
+                                        <PermIdentity/>
                                     </InputAdornment>
                                 }
                                        value={this.state.registerUsername}
@@ -191,10 +183,8 @@ class LoginPage extends Component {
                             <div style={styles.inputCtn}>
                                 <Input style={styles.input} placeholder="Password" type="password"
                                        startAdornment={
-                                           <InputAdornment position="start">
-                                               <IconButton disabled>
-                                                   <Lock/>
-                                               </IconButton>
+                                           <InputAdornment style={styles.adornment} position="start">
+                                               <Lock/>
                                            </InputAdornment>
                                        }
                                        value={this.state.registerPassword}
@@ -208,10 +198,8 @@ class LoginPage extends Component {
                             <div style={styles.inputCtn}>
                                 <Input style={styles.input} placeholder="Confirm Password" type="password"
                                        startAdornment={
-                                           <InputAdornment position="start">
-                                               <IconButton disabled>
-                                                   <CheckCircle/>
-                                               </IconButton>
+                                           <InputAdornment style={styles.adornment} position="start">
+                                               <CheckCircle/>
                                            </InputAdornment>
                                        }
                                        value={this.state.registerConfirmPassword}
@@ -234,10 +222,8 @@ class LoginPage extends Component {
                     <div style={styles.formCtn}>
                         <div style={styles.inputCtn}>
                             <Input style={styles.input} placeholder="Username" startAdornment={
-                                <InputAdornment position="start">
-                                    <IconButton disabled>
-                                        <PermIdentity/>
-                                    </IconButton>
+                                <InputAdornment style={styles.adornment} position="start">
+                                    <PermIdentity/>
                                 </InputAdornment>
                             }
                                    value={this.state.loginUsername}
@@ -247,10 +233,8 @@ class LoginPage extends Component {
                         </div>
                         <div style={styles.inputCtn}>
                             <Input style={styles.input} placeholder="Password" type="password" startAdornment={
-                                <InputAdornment position="start">
-                                    <IconButton disabled>
-                                        <Lock/>
-                                    </IconButton>
+                                <InputAdornment style={styles.adornment} position="start">
+                                    <Lock/>
                                 </InputAdornment>
                             }
                                    value={this.state.loginPassword}
