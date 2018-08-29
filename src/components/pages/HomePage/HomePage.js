@@ -182,22 +182,26 @@ class HomePage extends Component {
 
 
     handleSettingsChange = (event) => {
+        const setSnippetIds = (snippetIds) => {
+            this.setState({snippetIds: snippetIds});
+        };
+
         switch (event.target.id) {
             case this.MOST_POPULAR_MENUITEM:
                 this.props.saveSettings(FeedSettings.MOST_POPULAR);
-                this.queryFeed(FeedSettings.MOST_POPULAR);
+                this.queryFeed(FeedSettings.MOST_POPULAR, null, setSnippetIds);
                 break;
             case this.MOST_VIEWS_MENUITEM:
                 this.props.saveSettings(FeedSettings.MOST_VIEWS);
-                this.queryFeed(FeedSettings.MOST_VIEWS);
+                this.queryFeed(FeedSettings.MOST_VIEWS, null, setSnippetIds);
                 break;
             case this.MOST_UPVOTED_MENUITEM:
                 this.props.saveSettings(FeedSettings.MOST_UPVOTED);
-                this.queryFeed(FeedSettings.MOST_UPVOTED);
+                this.queryFeed(FeedSettings.MOST_UPVOTED, null, setSnippetIds);
                 break;
             case this.MOST_SAVED_MENUITEM:
                 this.props.saveSettings(FeedSettings.MOST_SAVED);
-                this.queryFeed(FeedSettings.MOST_SAVED);
+                this.queryFeed(FeedSettings.MOST_SAVED, null, setSnippetIds);
                 break;
         }
     };
