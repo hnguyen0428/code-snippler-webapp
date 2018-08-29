@@ -126,7 +126,6 @@ class ProfilePage extends Component {
 
         query = query.split(' ');
         let regexStr = query.join('|');
-        console.log(regexStr);
         let regex = new RegExp(regexStr, 'i');
 
         let results = [];
