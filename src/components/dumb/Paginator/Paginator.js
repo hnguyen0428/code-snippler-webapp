@@ -22,13 +22,17 @@ class Paginator extends Component {
 
         return (
             <Toolbar style={style}>
-                <IconButton onClick={this.props.onLeftIconClick} disabled={leftDisabled}>
+                <IconButton onClick={this.props.onLeftIconClick} disabled={leftDisabled || this.props.page === 1}>
                     <ChevronLeft/>
                 </IconButton>
 
-                <InputLabel>{this.props.page}</InputLabel>
+                { this.props.maxPage ?
+                    <InputLabel>{this.props.page} of {this.props.maxPage}</InputLabel>
+                    :
+                    <InputLabel>{this.props.page}</InputLabel>
+                }
 
-                <IconButton onClick={this.props.onRightIconClick} disabled={rightDisabled}>
+                <IconButton onClick={this.props.onRightIconClick} disabled={rightDisabled || this.props.page === this.props.maxPage}>
                     <ChevronRight/>
                 </IconButton>
             </Toolbar>
@@ -43,7 +47,8 @@ Paginator.propTypes = {
     page: PropTypes.string.isRequired,
     leftDisabled: PropTypes.bool,
     rightDisabled: PropTypes.bool,
-    style: PropTypes.object
+    style: PropTypes.object,
+    maxPage: PropTypes.number
 };
 
 

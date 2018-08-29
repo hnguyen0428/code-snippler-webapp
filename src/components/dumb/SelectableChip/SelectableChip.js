@@ -33,7 +33,7 @@ class SelectableChip extends Component {
                 <Chip
                     label={this.props.label}
                     onClick={this.onChipClick}
-                    style={{backgroundColor: this.props.chipColor}}
+                    style={{backgroundColor: this.props.chipColor, color: this.props.textColor}}
                 />
             </Toolbar>
         );
@@ -48,12 +48,14 @@ SelectableChip.propTypes = {
     name: PropTypes.string,
     chipColor: PropTypes.string,
     checkboxColor: PropTypes.string,
+    textColor: PropTypes.string,
     checkedIcon: PropTypes.object
 };
 
 SelectableChip.defaultProps = {
     chipColor: 'white',
     checkboxColor: 'white',
+    textColor: 'inherit',
     checkedIcon: <CheckBox/>,
     icon: <CheckBoxOutlineBlank/>
 };

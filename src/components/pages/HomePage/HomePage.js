@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import history from '../../../root/history';
 
 import Popper from '@material-ui/core/Popper';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -43,39 +44,93 @@ class HomePage extends Component {
     constructor(props) {
         super(props);
 
+        const params = new URLSearchParams(this.props.location.search);
+        let page = params.get('page');
+        if (page === null)
+            page = '1';
+
         this.state = {
             snippetIds: [],
             paginationParams: {
-                page: 0,
-                pageSize: SnipplerConfig.FEED_PAGE_SIZE
+                page: Number(page) - 1,
+                rightDisabled: false
             }
         };
     }
 
     componentWillMount() {
-        this.queryFeed();
+        let currSnippetIds = [];
+        let nextSnippetIds = [];
+
+        const setStateAction = () => {
+            this.setState({
+                snippetIds: currSnippetIds,
+                paginationParams: {
+                    ...this.state.paginationParams,
+                    rightDisabled: nextSnippetIds.length === 0
+                }
+            });
+        };
+
+        let requestCount = 0;
+
+        this.queryFeed(null, {
+            page: this.state.paginationParams.page,
+            pageSize: SnipplerConfig.FEED_PAGE_SIZE
+        }, (snippetIds) => {
+            currSnippetIds = snippetIds;
+            requestCount += 1;
+            if (requestCount === 2)
+                setStateAction();
+        });
+
+        this.queryFeed(null, {
+            page: this.state.paginationParams.page + 1,
+            pageSize: SnipplerConfig.FEED_PAGE_SIZE
+        }, (snippetIds) => {
+            nextSnippetIds = snippetIds;
+            requestCount += 1;
+            if (requestCount === 2)
+                setStateAction();
+        });
     }
 
 
-    queryFeed = (settingsCode, params) => {
+    componentDidUpdate(prevProps) {
+        if (prevProps.location.search !== undefined && this.props.location.search !== undefined) {
+            const currParams = new URLSearchParams(this.props.location.search);
+            let currPage = currParams.get('page');
+            const prevParams = new URLSearchParams(prevProps.location.search);
+            let prevPage = prevParams.get('page');
+            if (prevPage !== currPage)
+                window.location.reload();
+        }
+    }
+
+
+    queryFeed = (settingsCode, params, callback) => {
         const setSnippetIds = (res, err) => {
             if (res) {
                 let snippets = res.data;
                 let snippetIds = [];
+
                 snippets.forEach(snippet => {
                     snippetIds.push(snippet.snippetId);
                 });
-                this.setState({
-                    snippetIds: snippetIds
-                });
+
+                if (callback)
+                    callback(snippetIds)
             }
         };
 
         settingsCode = settingsCode !== undefined && settingsCode !== null ?
-            settingsCode :
-            this.props.settings.feedSettings;
+            settingsCode : this.props.settings.feedSettings;
 
-        params = params ? params : this.state.paginationParams;
+        // Query one more than the page size so we know if there is a next page or not
+        params = params ? params : {
+            page: this.state.paginationParams.page,
+            pageSize: SnipplerConfig.FEED_PAGE_SIZE
+        };
 
         switch (settingsCode) {
             case FeedSettings.MOST_POPULAR:
@@ -93,6 +148,22 @@ class HomePage extends Component {
             default:
                 break;
         }
+    };
+
+
+    handleForwardPaging = () => {
+        history.push({
+            pathname: '/',
+            search: '?page=' + String(this.state.paginationParams.page + 2),
+        });
+    };
+
+
+    handleBackwardPaging = () => {
+        history.push({
+            pathname: '/',
+            search: '?page=' + String(this.state.paginationParams.page)
+        });
     };
 
 
@@ -132,34 +203,6 @@ class HomePage extends Component {
     };
 
 
-    handleForwardPaging = () => {
-        let paginationParams = {
-            page: this.state.paginationParams.page + 1,
-            pageSize: this.state.paginationParams.pageSize
-        };
-
-        this.setState({
-            paginationParams: paginationParams
-        });
-
-        this.queryFeed(null, paginationParams);
-    };
-
-
-    handleBackwardPaging = () => {
-        let paginationParams = {
-            page: this.state.paginationParams.page - 1,
-            pageSize: this.state.paginationParams.pageSize
-        };
-
-        this.setState({
-            paginationParams: paginationParams
-        });
-
-        this.queryFeed(null, paginationParams);
-    };
-
-
     render() {
         let snippets = [];
         this.state.snippetIds.forEach(id => {
@@ -186,8 +229,7 @@ class HomePage extends Component {
                             page={this.state.paginationParams.page + 1}
                             onLeftIconClick={this.handleBackwardPaging}
                             onRightIconClick={this.handleForwardPaging}
-                            leftDisabled={this.state.paginationParams.page === 0}
-                            rightDisabled={this.state.snippetIds.length === 0}
+                            rightDisabled={this.state.paginationParams.rightDisabled}
                         />
 
                         <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
@@ -240,7 +282,6 @@ class HomePage extends Component {
                             page={this.state.paginationParams.page + 1}
                             onLeftIconClick={this.handleBackwardPaging}
                             onRightIconClick={this.handleForwardPaging}
-                            leftDisabled={this.state.paginationParams.page === 0}
                             rightDisabled={this.state.snippetIds.length === 0}
                         />
                     </div>

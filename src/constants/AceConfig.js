@@ -15,4 +15,28 @@ export const writeAceConfig = {
     enableLiveAutocompletion: true
 };
 
-export const editorTheme = 'tomorrow';
+
+export var editorTheme = localStorage.getItem("aceTheme") || "tomorrow";
+
+export function setEditorTheme(theme) {
+    editorTheme = theme;
+}
+
+
+export const supportedThemes = [
+    'Ambiance',
+    'Chaos',
+    'Chrome',
+    'Clouds',
+    'Cobalt',
+    'Dawn',
+    'Dracula',
+    'Eclipse',
+    'GitHub',
+    'Monokai',
+    'Terminal',
+    'Textmate',
+    'Tomorrow',
+    'Twilight',
+    'Xcode',
+];

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import {withStyles} from '@material-ui/core';
 import history from '../../../root/history';
 
 import AceEditor from 'react-ace';
 
-import {styles} from './styles';
+import {styles, materialStyles} from './styles';
 
 import {fetchSnippet, resetShouldIncreaseView} from "../../../redux/actions/snippetActions";
 import {overridePath} from "../../../redux/actions/routerActions";
@@ -13,6 +14,7 @@ import {overridePath} from "../../../redux/actions/routerActions";
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import PermIdentity from '@material-ui/icons/PermIdentity';
 import Avatar from '@material-ui/core/Avatar';
@@ -76,6 +78,8 @@ class SnippetDetailsPage extends Component {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
 
+        const {classes} = this.props;
+
 
         if (snippet) {
             let user = this.props.users.byIds[snippet.userId];
@@ -123,8 +127,19 @@ class SnippetDetailsPage extends Component {
 
                             <InputLabel style={styles.header}>{snippet.title}</InputLabel>
 
+
                             <div style={styles.descriptionCtn}>
-                                <InputLabel style={styles.description}>{snippet.description}</InputLabel>
+                                {snippet.description &&
+                                    <TextField
+                                        hintText="MultiLine with rows: 2 and rowsMax: 4"
+                                        multiline
+                                        value={snippet.description}
+                                        style={styles.description}
+                                        fullWidth
+                                        disabled
+                                        InputProps={{disableUnderline: true, classes: {input: classes.label}}}
+                                    />
+                                }
                             </div>
 
                             <div style={styles.dateCtn}>
@@ -177,4 +192,4 @@ export default withRouter(connect(mapStateToProps,
         resetShouldIncreaseView,
         overridePath
     }
-)(SnippetDetailsPage));
+)(withStyles(materialStyles)(SnippetDetailsPage)));

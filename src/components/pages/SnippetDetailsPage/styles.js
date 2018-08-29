@@ -9,7 +9,7 @@ export const styles = {
         justifyContent: 'center',
         position: 'absolute',
         width: '100%',
-        height: '100%',
+        height: 'auto',
         backgroundColor: theme.backgroundColor
     },
     editButton: {
@@ -17,6 +17,7 @@ export const styles = {
     },
     contentCtn: {
         width: '800px',
+        marginBottom: '50px'
     },
     actionsCtn: {
         flexDirection: 'row',
@@ -47,7 +48,7 @@ export const styles = {
     header: {
         fontSize: '34px',
         fontFamily: 'Lucida Grande, Sans Serif',
-        fontWeight: '300'
+        fontWeight: '300',
     },
     descriptionCtn: {
         width: '85%',
@@ -57,10 +58,19 @@ export const styles = {
     },
     description: {
         fontSize: '15px',
-        fontFamily: 'Lucida Grande, Sans Serif'
+        fontFamily: 'Lucida Grande, Sans Serif',
+        whiteSpace: 'pre-line',
+        lineHeight: 0.5
     },
     editor: {
         height: '650px',
         width: 'inherit'
+    }
+};
+
+
+export const materialStyles = {
+    label: {
+        color: '#595959'
     }
 };

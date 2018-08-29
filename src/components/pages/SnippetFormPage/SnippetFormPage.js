@@ -100,7 +100,7 @@ class SnippetFormPage extends Component {
 
 
     onEditorValidate = (object) => {
-        console.log(object);
+
     };
 
 

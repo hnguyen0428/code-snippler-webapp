@@ -6,7 +6,7 @@ export const styles = {
         display: 'flex',
         position: 'absolute',
         width: '100%',
-        height: '100%',
+        height: 'auto',
         backgroundColor: theme.backgroundColor,
         flexDirection: 'row',
         justifyContent: 'center'
@@ -16,6 +16,7 @@ export const styles = {
         display: 'flex',
         width: '37%',
         flexDirection: 'column',
+        height: 'auto'
     },
     textField: {
         marginTop: '7px',

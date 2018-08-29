@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import history from '../../../root/history';
 import {withStyles} from '@material-ui/core'
@@ -10,6 +9,8 @@ import {withStyles} from '@material-ui/core'
 import Paginator from '../../dumb/Paginator/Paginator';
 import SnippetsList from '../../dumb/SnippetsList/SnippetsList';
 import SearchBar from '../../dumb/SearchBar/SearchBar';
+import SettingsDialog from '../../dumb/SettingsDialog/SettingsDialog';
+import EditorSettingsDialog from '../../smart/EditorSettingsDialog/EditorSettingsDialog';
 
 import IconButton from '@material-ui/core/IconButton';
 import Tabs from '@material-ui/core/Tabs';
@@ -17,6 +18,8 @@ import Tab from '@material-ui/core/Tab';
 import Toolbar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
 import InputLabel from '@material-ui/core/InputLabel';
+
+import Settings from '@material-ui/icons/Settings';
 
 import {
     fetchMyCreatedSnippets,
@@ -31,6 +34,7 @@ import {fetchSnippetsByIds} from "../../../redux/actions/snippetActions";
 
 import {styles, materialStyles} from './styles';
 import {theme} from '../../../constants/GlobalStyles';
+import SnipplerConfig from '../../../constants/SnipplerConfig';
 
 const moment = require('moment');
 
@@ -45,7 +49,10 @@ class ProfilePage extends Component {
 
         this.state = {
             tabValue: this.CREATED_SNIPPETS_INDEX,
-            searchQuery: ''
+            searchQuery: '',
+            page: 0,
+            settingsDialogOpen: false,
+            editorSettingsDialogOpen: false
         };
     }
 
@@ -134,6 +141,58 @@ class ProfilePage extends Component {
     };
 
 
+    paginate = (snippets, page, pageSize) => {
+        let start = page * pageSize;
+        let end = start + pageSize;
+        if (end > snippets.length)
+            return snippets.slice(start);
+        else
+            return snippets.slice(start, end);
+    };
+
+
+    onBackwardPaging = () => {
+        this.setState({page: this.state.page - 1});
+    };
+
+
+    onForwardPaging = () => {
+        this.setState({page: this.state.page + 1});
+    };
+
+
+    onClickSettings = () => {
+        this.setState({settingsDialogOpen: true});
+    };
+
+
+    closeSettingsDialog = () => {
+        this.setState({settingsDialogOpen: false});
+    };
+
+    onClickEditorSettings = () => {
+        this.setState({editorSettingsDialogOpen: true});
+    };
+
+    onClickChangePassword = () => {
+
+    };
+
+    onClickProfileInfo = () => {
+
+    };
+
+    onClickBackDialog = (dialog) => {
+        console.log(dialog.props.name);
+        this.setState({editorSettingsDialogOpen: false});
+    };
+
+    onClickSaveDialog = (dialog) => {
+        console.log(dialog.props.name);
+        this.setState({editorSettingsDialogOpen: false});
+    };
+
+
     render() {
         if (this.props.match.params.userId === 'me' && !this.props.auth.loggedIn) {
             return <div/>;
@@ -169,23 +228,58 @@ class ProfilePage extends Component {
                 });
             }
 
-            if (this.state.searchQuery !== '')
-                snippets = this.filterByQuery(snippets, this.state.searchQuery);
+            let maxPage = 1;
 
+            if (this.state.searchQuery !== '') {
+                snippets = this.filterByQuery(snippets, this.state.searchQuery);
+                maxPage = Math.ceil(snippets.length / SnipplerConfig.PROFILE_PAGE_SIZE);
+                snippets = this.paginate(snippets, this.state.page, SnipplerConfig.PROFILE_PAGE_SIZE);
+            }
+            else {
+                maxPage = Math.ceil(snippets.length / SnipplerConfig.PROFILE_PAGE_SIZE);
+                snippets = this.paginate(snippets, this.state.page, SnipplerConfig.PROFILE_PAGE_SIZE);
+            }
 
             return (
                 <div style={styles.rootCtn}>
+                    <SettingsDialog
+                        open={this.state.settingsDialogOpen}
+                        onBackdropClick={this.closeSettingsDialog}
+                        onEscapeKeyDown={this.closeSettingsDialog}
+                        onClickEditor={this.onClickEditorSettings}
+                        onClickPassword={this.onClickChangePassword}
+                        onClickProfile={this.onClickProfileInfo}
+                    />
+
+                    <EditorSettingsDialog
+                        name="EditorSettingsDialog"
+                        open={this.state.editorSettingsDialogOpen}
+                        maxWidth="md"
+                        onClickBack={this.onClickBackDialog}
+                        onClickSave={this.onClickSaveDialog}
+                    />
+
                     <div style={styles.contentCtn}>
-                        <div style={styles.usernameCtn}>
-                            <Toolbar>
-                                <Avatar style={styles.profileIcon}>
-                                    {user.username.substr(0, 1).toUpperCase()}
-                                </Avatar>
-                                <InputLabel style={styles.username}>
-                                    {user.username + '\n'}
-                                    Joined in {date}
-                                </InputLabel>
-                            </Toolbar>
+                        <div style={styles.actionsCtn}>
+                            <div style={styles.usernameCtn}>
+                                <Toolbar>
+                                    <Avatar style={styles.profileIcon}>
+                                        {user.username.substr(0, 1).toUpperCase()}
+                                    </Avatar>
+                                    <InputLabel style={styles.username}>
+                                        {user.username + '\n'}
+                                        Joined in {date}
+                                    </InputLabel>
+                                </Toolbar>
+                            </div>
+
+                            <div style={{flex: '1'}}/>
+
+                            { isMe &&
+                            <IconButton onClick={this.onClickSettings}>
+                                <Settings/>
+                            </IconButton>
+                            }
                         </div>
 
                         <hr style={theme.hrLine}/>
@@ -214,6 +308,12 @@ class ProfilePage extends Component {
                         <hr style={theme.hrLine}/>
 
                         <SnippetsList style={styles.snippetsCtn} snippets={snippets}/>
+                        <Paginator
+                            page={this.state.page + 1}
+                            maxPage={maxPage}
+                            onLeftIconClick={this.onBackwardPaging}
+                            onRightIconClick={this.onForwardPaging}
+                        />
                     </div>
                 </div>
             );

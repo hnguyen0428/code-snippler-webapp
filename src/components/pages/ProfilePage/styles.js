@@ -8,11 +8,12 @@ export const styles = {
         justifyContent: 'center',
         position: 'absolute',
         width: '100%',
-        height: '100%',
+        height: 'auto',
         backgroundColor: theme.backgroundColor,
     },
     contentCtn: {
         width: '800px',
+        marginBottom: '50px'
     },
     usernameCtn: {
         height: '40px',
@@ -26,6 +27,10 @@ export const styles = {
         whiteSpace: 'pre-line',
         lineHeight: '1.4em',
         fontSize: '15px'
+    },
+    actionsCtn: {
+        flexDirection: 'row',
+        display: 'flex'
     },
     snippetsCtn: {
         width: '100%'
