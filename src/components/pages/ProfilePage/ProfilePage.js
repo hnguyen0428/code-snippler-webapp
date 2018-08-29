@@ -268,7 +268,7 @@ class ProfilePage extends Component {
                 maxPage = Math.ceil(snippets.length / SnipplerConfig.PROFILE_PAGE_SIZE);
                 snippets = this.paginate(snippets, this.state.page, SnipplerConfig.PROFILE_PAGE_SIZE);
             }
-            else {
+            else if (snippets.length !== 0) {
                 maxPage = Math.ceil(snippets.length / SnipplerConfig.PROFILE_PAGE_SIZE);
                 snippets = this.paginate(snippets, this.state.page, SnipplerConfig.PROFILE_PAGE_SIZE);
             }
