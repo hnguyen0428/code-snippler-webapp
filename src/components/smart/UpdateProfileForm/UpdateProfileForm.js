@@ -5,16 +5,11 @@ import {connect} from 'react-redux';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
 
 import Mail from '@material-ui/icons/Mail';
 import PermContactCalendar from '@material-ui/icons/PermContactCalendar';
@@ -22,8 +17,6 @@ import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
 
 import {updateProfile, fetchMe} from "../../../redux/actions/userActions";
 import {showAlert, closeAlert} from "../../../redux/actions/alertActions";
-
-import SnipplerConfig from '../../../constants/SnipplerConfig';
 
 import {styles} from './styles';
 import Utility from "../../../util/Utility";

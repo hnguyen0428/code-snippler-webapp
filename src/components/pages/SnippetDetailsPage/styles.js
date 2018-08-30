@@ -64,7 +64,23 @@ export const styles = {
     },
     editor: {
         height: '650px',
-        width: 'inherit'
+        width: 'inherit',
+        marginBottom: '50px'
+    },
+    commentsList: {
+        height: '400px',
+        overflow: 'auto'
+    },
+    commentTextField: {
+        marginTop: '20px',
+        marginBottom: '20px'
+    },
+    commentBoxAvatar: {
+        marginRight: '10px',
+        marginBottom: '5px'
+    },
+    commentBoxBtn: {
+        alignSelf: 'flex-end'
     }
 };
 

@@ -19,11 +19,16 @@ export default function(state = initialState, action) {
             };
         }
         case FETCH_USERS: {
-            let users = action.payload.data;
+            let users = action.payload;
+            let byIds = state.byIds;
+
             users.forEach(user => {
-                state.byIds[user.userId] = user;
+                byIds[user.userId] = user;
             });
-            return state;
+            return {
+                ...state,
+                byIds: byIds
+            };
         }
         default:
             return state;

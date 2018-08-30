@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
@@ -30,7 +29,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Mail from '@material-ui/icons/Mail';
 import PermContactCalendar from '@material-ui/icons/PermContactCalendar';
 import PermIdentity from '@material-ui/icons/PermIdentity';
-import DateRange from '@material-ui/icons/DateRange';
 import Settings from '@material-ui/icons/Settings';
 
 import {

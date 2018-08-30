@@ -9,6 +9,7 @@ export const handleActionsResult = (data, error, callback, noResCB, showErr) => 
     if (data) {
         if (callback)
             callback(data, null);
+
         return true;
     }
     else if (error) {

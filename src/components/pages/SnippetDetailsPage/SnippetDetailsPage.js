@@ -6,17 +6,18 @@ import history from '../../../root/history';
 
 import AceEditor from 'react-ace';
 
+import CommentsList from '../../dumb/CommentsList/CommentsList';
+
 import {styles, materialStyles} from './styles';
 
-import {fetchSnippet, resetShouldIncreaseView} from "../../../redux/actions/snippetActions";
+import {fetchSnippet, resetShouldIncreaseView, fetchComments, createComment} from "../../../redux/actions/snippetActions";
 import {overridePath} from "../../../redux/actions/routerActions";
 
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
-import Toolbar from '@material-ui/core/Toolbar';
-import PermIdentity from '@material-ui/icons/PermIdentity';
 import Avatar from '@material-ui/core/Avatar';
 
 import {languagesMap} from '../../../constants/languages';
@@ -39,8 +40,13 @@ const moment = require('moment');
 class SnippetDetailsPage extends Component {
     constructor(props) {
         super(props);
+
+        this.queryingComments = false;
+
         this.state = {
-            params: {}
+            params: {},
+            commentIds: [],
+            commentText: ''
         }
     }
 
@@ -54,7 +60,29 @@ class SnippetDetailsPage extends Component {
 
         this.props.fetchSnippet(this.props.match.params.snippetId, params);
         this.props.resetShouldIncreaseView();
+
+        this.queryComments();
     }
+
+
+    queryComments = () => {
+        if (!this.queryingComments) {
+            this.queryingComments = true;
+            this.props.fetchComments(this.props.match.params.snippetId, {showUserDetails: true},
+                (res, err) => {
+                    this.queryingComments = false;
+                    if (res) {
+                        let comments = res.data;
+                        let commentIds = [];
+                        comments.forEach(comment => {commentIds.push(comment.commentId)});
+
+                        this.setState({
+                            commentIds: commentIds
+                        });
+                    }
+                });
+        }
+    };
 
 
     onClickEdit = () => {
@@ -71,6 +99,20 @@ class SnippetDetailsPage extends Component {
             history.push('/user/me');
         else
             history.push('/user/' + snippet.userId);
+    };
+
+    onChangeComment = (event) => {
+        this.setState({commentText: event.target.value});
+    };
+
+    onClickComment = () => {
+        this.props.createComment(this.props.match.params.snippetId, {
+            content: this.state.commentText
+        }, (res, err) => {
+            if (res) {
+                this.setState({commentText: ''});
+            }
+        });
     };
 
 
@@ -93,6 +135,12 @@ class SnippetDetailsPage extends Component {
                 updatedDate = new Date(snippet.updatedDate);
                 updatedDate = moment(updatedDate).format("MMMM Do, YYYY");
             }
+
+            let comments = [];
+            this.state.commentIds.forEach(id => {
+                if (this.props.comments.byIds[id])
+                    comments.push(this.props.comments.byIds[id]);
+            });
 
             return (
                 <div style={styles.rootCtn}>
@@ -168,6 +216,31 @@ class SnippetDetailsPage extends Component {
                             wrapEnabled
                             setOptions={aceConfig}
                         />
+
+                        <TextField
+                            style={styles.commentTextField}
+                            placeholder="Add a comment..." fullWidth
+                            helperText={
+                                <Button color="primary"
+                                        disabled={this.state.commentText.length === 0}
+                                        onClick={this.onClickComment}
+                                >
+                                    Comment
+                                </Button>
+                            }
+                            FormHelperTextProps={{style: styles.commentBoxBtn}}
+                            InputProps={
+                                {
+                                    startAdornment:
+                                    <Avatar style={styles.commentBoxAvatar}>
+                                        {username.substr(0, 1).toUpperCase()}
+                                    </Avatar>,
+                                    onChange: this.onChangeComment
+                                }
+                            }
+                            value={this.state.commentText}
+                        />
+                        <CommentsList style={styles.commentsList} comments={comments}/>
                     </div>
                 </div>
             );
@@ -181,7 +254,8 @@ function mapStateToProps(state) {
     return {
         auth: state.auth,
         snippets: state.snippets,
-        users: state.users
+        users: state.users,
+        comments: state.comments
     };
 }
 
@@ -190,6 +264,8 @@ export default withRouter(connect(mapStateToProps,
     {
         fetchSnippet,
         resetShouldIncreaseView,
-        overridePath
+        overridePath,
+        fetchComments,
+        createComment
     }
 )(withStyles(materialStyles)(SnippetDetailsPage)));

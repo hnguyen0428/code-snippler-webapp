@@ -168,11 +168,13 @@ export const createComment = (snippetId, params, callback, noResCB) => dispatch 
 export const fetchComments = (snippetId, params, callback, noResCB) => dispatch => {
     Snippler.snippet().getComments(snippetId, params, (res, error) => {
         let success = handleActionsResult(res, error, callback, noResCB);
+
         if (success) {
             dispatch({
                 type: FETCH_COMMENTS,
                 payload: res.data
             });
+
 
             if (params && params.showUserDetails) {
                 let users = [];
@@ -180,10 +182,11 @@ export const fetchComments = (snippetId, params, callback, noResCB) => dispatch 
                     users.push(comment.user);
                 });
 
-                dispatch({
-                    type: FETCH_USERS,
-                    payload: users
-                });
+                if (users.length !== 0)
+                    dispatch({
+                        type: FETCH_USERS,
+                        payload: users
+                    });
             }
         }
     });
