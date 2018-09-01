@@ -10,7 +10,15 @@ import CommentsList from '../../dumb/CommentsList/CommentsList';
 
 import {styles, materialStyles} from './styles';
 
-import {fetchSnippet, resetShouldIncreaseView, fetchComments, createComment} from "../../../redux/actions/snippetActions";
+import {
+    fetchSnippet,
+    upvoteSnippet,
+    downvoteSnippet,
+    saveSnippet,
+    resetShouldIncreaseView,
+    fetchComments,
+    createComment
+} from "../../../redux/actions/snippetActions";
 import {overridePath} from "../../../redux/actions/routerActions";
 
 import Edit from '@material-ui/icons/Edit';
@@ -19,6 +27,11 @@ import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
+
+import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
+import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
+import Star from '@material-ui/icons/Star';
 
 import {languagesMap} from '../../../constants/languages';
 
@@ -28,6 +41,7 @@ import 'brace/theme/tomorrow';
 
 
 import {readAceConfig as aceConfig, editorTheme} from '../../../constants/AceConfig';
+import SnipplerConfig from '../../../constants/SnipplerConfig'
 
 for (let language in languagesMap) {
     let mode = languagesMap[language];
@@ -45,8 +59,9 @@ class SnippetDetailsPage extends Component {
 
         this.state = {
             params: {},
-            commentIds: [],
-            commentText: ''
+            commentText: '',
+            currCommentsPage: 0,
+            comments: {}
         }
     }
 
@@ -65,20 +80,41 @@ class SnippetDetailsPage extends Component {
     }
 
 
-    queryComments = () => {
+    queryComments = (queryNext) => {
         if (!this.queryingComments) {
             this.queryingComments = true;
-            this.props.fetchComments(this.props.match.params.snippetId, {showUserDetails: true},
+            const nextPage = this.state.currCommentsPage + 1;
+            const queryPage = queryNext !== undefined && queryNext ? nextPage : this.state.currCommentsPage;
+            const params = {
+                showUserDetails: true,
+                page: queryPage,
+                pageSize: SnipplerConfig.COMMENTS_LIST_SIZE
+            };
+
+            this.props.fetchComments(this.props.match.params.snippetId, params,
                 (res, err) => {
                     this.queryingComments = false;
                     if (res) {
                         let comments = res.data;
                         let commentIds = [];
                         comments.forEach(comment => {commentIds.push(comment.commentId)});
+                        console.log(comments);
 
-                        this.setState({
-                            commentIds: commentIds
-                        });
+                        if (queryNext)
+                            this.setState({
+                                currCommentsPage: nextPage,
+                                comments: {
+                                    ...this.state.comments,
+                                    [queryPage]: commentIds
+                                }
+                            });
+                        else
+                            this.setState({
+                                comments: {
+                                    ...this.state.comments,
+                                    [queryPage]: commentIds
+                                }
+                            });
                     }
                 });
         }
@@ -111,14 +147,65 @@ class SnippetDetailsPage extends Component {
         }, (res, err) => {
             if (res) {
                 this.setState({commentText: ''});
+                this.queryComments();
             }
         });
+    };
+
+    redirectToLogin = () => {
+        history.push('/login');
+        this.props.closeBinaryAlert();
+    };
+
+
+    handleSaveSnippet = (event) => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+        if (!this.props.auth.loggedIn)
+            this.props.showBinaryAlert('Sign In?', 'To save the snippet, you must sign in', actionOne, actionTwo);
+
+        const snippetId = this.props.match.params.snippetId;
+        const saved = this.props.snippets.byIds[snippetId].saved;
+
+        if (saved !== undefined)
+            this.props.saveSnippet(snippetId, !saved);
+    };
+
+
+    handleUpvoteSnippet = (event) => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+        if (!this.props.auth.loggedIn)
+            this.props.showBinaryAlert('Sign In?', 'To upvote the snippet, you must sign in', actionOne, actionTwo);
+
+        const snippetId = this.props.match.params.snippetId;
+        const upvoted = this.props.snippets.byIds[snippetId].upvoted;
+        if (upvoted !== undefined)
+            this.props.upvoteSnippet(snippetId, !upvoted);
+    };
+
+
+    handleDownvoteSnippet = (event) => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Sign In', callback: this.redirectToLogin};
+        if (!this.props.auth.loggedIn)
+            this.props.showBinaryAlert('Sign In?', 'To downvote the snippet, you must sign in', actionOne, actionTwo);
+
+        const snippetId = this.props.match.params.snippetId;
+        const downvoted = this.props.snippets.byIds[snippetId].downvoted;
+        if (downvoted !== undefined)
+            this.props.downvoteSnippet(snippetId, !downvoted);
+    };
+
+    commentsScrolledToBottom = (commentsList) => {
+        this.queryComments(true);
     };
 
 
     render() {
         let snippetId = this.props.match.params.snippetId;
         let snippet = this.props.snippets.byIds[snippetId];
+        let currentUser = this.props.auth.currentUser;
 
         const {classes} = this.props;
 
@@ -137,10 +224,13 @@ class SnippetDetailsPage extends Component {
             }
 
             let comments = [];
-            this.state.commentIds.forEach(id => {
-                if (this.props.comments.byIds[id])
-                    comments.push(this.props.comments.byIds[id]);
-            });
+            let pages = Object.keys(this.state.comments).sort();
+            for (let page of pages) {
+                this.state.comments[page].forEach(id => {
+                    if (this.props.comments.byIds[id])
+                        comments.push(this.props.comments.byIds[id]);
+                })
+            }
 
             return (
                 <div style={styles.rootCtn}>
@@ -179,7 +269,6 @@ class SnippetDetailsPage extends Component {
                             <div style={styles.descriptionCtn}>
                                 {snippet.description &&
                                     <TextField
-                                        hintText="MultiLine with rows: 2 and rowsMax: 4"
                                         multiline
                                         value={snippet.description}
                                         style={styles.description}
@@ -217,30 +306,68 @@ class SnippetDetailsPage extends Component {
                             setOptions={aceConfig}
                         />
 
-                        <TextField
-                            style={styles.commentTextField}
-                            placeholder="Add a comment..." fullWidth
-                            helperText={
-                                <Button color="primary"
-                                        disabled={this.state.commentText.length === 0}
-                                        onClick={this.onClickComment}
+                        <div style={styles.iconsCtn}>
+                            <Tooltip disableFocusListener disableTouchListener title="Save">
+                                <IconButton
+                                    style={snippet.saved ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
+                                    onClick={this.handleSaveSnippet}
                                 >
-                                    Comment
-                                </Button>
-                            }
-                            FormHelperTextProps={{style: styles.commentBoxBtn}}
-                            InputProps={
-                                {
-                                    startAdornment:
-                                    <Avatar style={styles.commentBoxAvatar}>
-                                        {username.substr(0, 1).toUpperCase()}
-                                    </Avatar>,
-                                    onChange: this.onChangeComment
+                                    <Star style={styles.icon}/>
+                                    {snippet.savedCount}
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip disableFocusListener disableTouchListener title="Upvote">
+                                <IconButton
+                                    style={snippet.upvoted ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
+                                    onClick={this.handleUpvoteSnippet}
+                                >
+                                    <ThumbUpAlt style={styles.icon}/>
+                                    {snippet.upvotes}
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip disableFocusListener disableTouchListener title="Downvote">
+                                <IconButton
+                                    style={snippet.downvoted ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
+                                    onClick={this.handleDownvoteSnippet}
+                                >
+                                    <ThumbDownAlt style={styles.icon}/>
+                                    {snippet.downvotes}
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+
+                        {
+                            currentUser &&
+                            <TextField
+                                style={styles.commentTextField}
+                                placeholder="Add a comment..." fullWidth
+                                helperText={
+                                    <Button color="primary"
+                                            disabled={this.state.commentText.length === 0}
+                                            onClick={this.onClickComment}
+                                    >
+                                        Comment
+                                    </Button>
                                 }
-                            }
-                            value={this.state.commentText}
-                        />
-                        <CommentsList style={styles.commentsList} comments={comments}/>
+                                FormHelperTextProps={{style: styles.commentBoxBtn}}
+                                InputProps={
+                                    {
+                                        startAdornment: <Avatar style={styles.commentBoxAvatar}>
+                                            {currentUser.username.substr(0, 1).toUpperCase()}
+                                        </Avatar>,
+                                        onChange: this.onChangeComment
+                                    }
+                                }
+                                value={this.state.commentText}
+                            />
+                        }
+
+                        { comments.length !== 0 &&
+                            <CommentsList
+                                style={styles.commentsList} comments={comments}
+                                onScrollToBottom={this.commentsScrolledToBottom}
+                            />
+                        }
                     </div>
                 </div>
             );
@@ -263,6 +390,9 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps,
     {
         fetchSnippet,
+        upvoteSnippet,
+        downvoteSnippet,
+        saveSnippet,
         resetShouldIncreaseView,
         overridePath,
         fetchComments,

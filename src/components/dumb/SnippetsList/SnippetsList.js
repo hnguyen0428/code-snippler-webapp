@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import SnippetItem from '../SnippetItem/SnippetItem';
+import SnippetItem from '../../smart/SnippetItem/SnippetItem';
 
 import {styles} from './styles';
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import CommentItem from '../../smart/CommentItem/CommentItem';
 
 import {styles} from './styles';
 
@@ -36,11 +37,9 @@ class CommentsList extends Component {
             <List id="commentsList" {...props} onScroll={this.trackScrolling}>
                 {
                     comments.map((comment, i) => {
-                        const id = "commentsListBottom";
+                        const id = i === comments.length - 1 ? "commentsListBottom" : undefined;
                         return (
-                            <ListItem id={i === comments.length - 1 ? id : undefined}>
-                                {comment.content}
-                            </ListItem>
+                            <CommentItem id={id} comment={comment} style={styles.commentItem}/>
                         );
                     })
                 }

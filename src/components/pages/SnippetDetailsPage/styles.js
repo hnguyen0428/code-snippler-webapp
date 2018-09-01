@@ -60,16 +60,16 @@ export const styles = {
         fontSize: '15px',
         fontFamily: 'Lucida Grande, Sans Serif',
         whiteSpace: 'pre-line',
-        lineHeight: 0.5
     },
     editor: {
         height: '650px',
         width: 'inherit',
-        marginBottom: '50px'
+        marginBottom: '10px'
     },
     commentsList: {
-        height: '400px',
-        overflow: 'auto'
+        maxHeight: '400px',
+        overflow: 'auto',
+        backgroundColor: 'white',
     },
     commentTextField: {
         marginTop: '20px',
@@ -81,6 +81,25 @@ export const styles = {
     },
     commentBoxBtn: {
         alignSelf: 'flex-end'
+    },
+    iconsCtn: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        height: '20px',
+        justifyContent: 'flex-end',
+        paddingBottom: '20px',
+        marginBottom: '50px'
+    },
+    iconCtn: {
+        fontSize: '18px',
+        marginLeft: '3px',
+        marginRight: '3px',
+    },
+    icon: {
+        width: '23px',
+        height: '23px',
+        marginRight: '3px',
     }
 };
 

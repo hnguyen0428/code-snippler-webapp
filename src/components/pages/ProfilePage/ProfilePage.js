@@ -304,41 +304,49 @@ class ProfilePage extends Component {
                         </div>
                     </Dialog>
 
-                    <SettingsDialog
-                        open={this.state.settingsDialogOpen}
-                        onBackdropClick={this.closeSettingsDialog}
-                        onEscapeKeyDown={this.closeSettingsDialog}
-                        onClickEditor={this.onClickEditorSettings}
-                        onClickPassword={this.onClickChangePassword}
-                        onClickProfile={this.onClickUpdateProfileInfo}
-                    />
+                    { this.props.auth.loggedIn &&
+                        <SettingsDialog
+                            open={this.state.settingsDialogOpen}
+                            onBackdropClick={this.closeSettingsDialog}
+                            onEscapeKeyDown={this.closeSettingsDialog}
+                            onClickEditor={this.onClickEditorSettings}
+                            onClickPassword={this.onClickChangePassword}
+                            onClickProfile={this.onClickUpdateProfileInfo}
+                        />
+                    }
 
-                    <EditorSettingsDialog
-                        name="editorSettingsDialogOpen"
-                        open={this.state.editorSettingsDialogOpen}
-                        maxWidth="md"
-                        onClickBack={this.onBackDialog}
-                        onClickSave={this.onSaveDialog}
-                        onBackdropClick={this.onBackDialog}
-                    />
+                    { this.props.auth.loggedIn &&
+                        <EditorSettingsDialog
+                            name="editorSettingsDialogOpen"
+                            open={this.state.editorSettingsDialogOpen}
+                            maxWidth="md"
+                            onClickBack={this.onBackDialog}
+                            onClickSave={this.onSaveDialog}
+                            onBackdropClick={this.onBackDialog}
+                        />
+                    }
 
-                    <ChangePasswordForm
-                        name="changePwFormOpen"
-                        open={this.state.changePwFormOpen}
-                        maxWidth="md"
-                        onClickBack={this.onBackDialog}
-                        onClickSave={this.onSaveDialog}
-                        onBackdropClick={this.onBackDialog}
-                    />
+                    { this.props.auth.loggedIn &&
+                        <ChangePasswordForm
+                            name="changePwFormOpen"
+                            open={this.state.changePwFormOpen}
+                            maxWidth="md"
+                            onClickBack={this.onBackDialog}
+                            onClickSave={this.onSaveDialog}
+                            onBackdropClick={this.onBackDialog}
+                        />
+                    }
 
-                    <UpdateProfileForm
-                        name="updateProfileFormOpen"
-                        open={this.state.updateProfileFormOpen}
-                        maxWidth="md"
-                        onClickBack={this.onBackDialog}
-                        onClickSave={this.onSaveDialog}
-                        onBackdropClick={this.onBackDialog}
-                    />
+                    { this.props.auth.loggedIn &&
+                        <UpdateProfileForm
+                            name="updateProfileFormOpen"
+                            open={this.state.updateProfileFormOpen}
+                            maxWidth="md"
+                            onClickBack={this.onBackDialog}
+                            onClickSave={this.onSaveDialog}
+                            onBackdropClick={this.onBackDialog}
+                        />
+                    }
 
                     <div style={styles.contentCtn}>
                         <div style={styles.actionsCtn}>

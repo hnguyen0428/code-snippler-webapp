@@ -33,7 +33,7 @@ class UpdateProfileForm extends Component {
         super(props);
 
         let user = this.props.auth.currentUser;
-        if (user.profile)
+        if (user && user.profile)
             this.state = {
                 firstName: user.profile.firstName ? user.profile.firstName : '',
                 lastName: user.profile.lastName ? user.profile.lastName : '',
