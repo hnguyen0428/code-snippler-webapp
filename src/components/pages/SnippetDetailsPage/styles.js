@@ -74,6 +74,7 @@ export const styles = {
         maxHeight: '800px',
         overflow: 'auto',
         backgroundColor: 'white',
+        boxShadow: '0px 0px 10px -3px #999',
     },
     commentTextField: {
         marginTop: '20px',
