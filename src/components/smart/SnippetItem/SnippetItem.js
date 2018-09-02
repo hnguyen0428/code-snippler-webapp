@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
-import Star from '@material-ui/icons/Star';
+import Bookmark from '@material-ui/icons/Bookmark';
 import Visibility from '@material-ui/icons/Visibility';
 
 import history from '../../../root/history';
@@ -105,7 +102,7 @@ class SnippetItem extends Component {
                                 style={snippet.saved ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
                                 onClick={this.handleSaveSnippet}
                             >
-                                <Star style={styles.icon}/>
+                                <Bookmark style={styles.icon}/>
                                 {snippet.savedCount}
                             </IconButton>
                         </Tooltip>

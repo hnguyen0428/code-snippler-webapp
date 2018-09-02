@@ -40,7 +40,7 @@ import MenuList from '@material-ui/core/MenuList';
 
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
-import Star from '@material-ui/icons/Star';
+import Bookmark from '@material-ui/icons/Bookmark';
 import Settings from '@material-ui/icons/Settings';
 
 import {languagesMap} from '../../../constants/languages';
@@ -370,7 +370,7 @@ class SnippetDetailsPage extends Component {
                                     style={snippet.saved ? {...styles.iconBtn, color: '#DE555C'} : styles.iconBtn}
                                     onClick={this.handleSaveSnippet}
                                 >
-                                    <Star style={styles.icon}/>
+                                    <Bookmark style={styles.icon}/>
                                     {snippet.savedCount}
                                 </IconButton>
                             </Tooltip>
