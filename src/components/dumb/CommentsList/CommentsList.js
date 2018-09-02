@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import CommentItem from '../../smart/CommentItem/CommentItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {styles} from './styles';
 
@@ -32,7 +33,6 @@ class CommentsList extends Component {
     render() {
         const {comments, ...props} = this.props;
 
-
         return (
             <List id="commentsList" {...props} onScroll={this.trackScrolling}>
                 {
@@ -43,6 +43,12 @@ class CommentsList extends Component {
                         );
                     })
                 }
+                {
+                    this.props.loading &&
+                        <div style={styles.progressCtn}>
+                            <CircularProgress size={40}/>
+                        </div>
+                }
             </List>
         );
     }
@@ -51,8 +57,15 @@ class CommentsList extends Component {
 
 CommentsList.propTypes = {
     onScrollToBottom: PropTypes.func,
-    comments: PropTypes.array.isRequired
+    comments: PropTypes.array.isRequired,
+    loading: PropTypes.bool
 };
+
+
+CommentsList.defaultProps = {
+    loading: false
+};
+
 
 
 export default CommentsList;

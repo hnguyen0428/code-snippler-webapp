@@ -56,7 +56,8 @@ class HomePage extends Component {
             paginationParams: {
                 page: Number(page) - 1,
                 rightDisabled: false
-            }
+            },
+            doneFetching: false
         };
     }
 
@@ -70,7 +71,8 @@ class HomePage extends Component {
                 paginationParams: {
                     ...this.state.paginationParams,
                     rightDisabled: nextSnippetIds.length === 0
-                }
+                },
+                doneFetching: true
             });
         };
 
@@ -188,8 +190,13 @@ class HomePage extends Component {
 
     handleSettingsChange = (event) => {
         const setSnippetIds = (snippetIds) => {
-            this.setState({snippetIds: snippetIds});
+            this.setState({
+                snippetIds: snippetIds,
+                doneFetching: true
+            });
         };
+
+        this.setState({doneFetching: false});
 
         switch (event.target.id) {
             case this.MOST_POPULAR_MENUITEM:
@@ -237,7 +244,7 @@ class HomePage extends Component {
                             <Settings/>
                         </IconButton>
 
-                        <SnippetsList style={styles.snippetsCtn} snippets={snippets}/>
+                        <SnippetsList style={styles.snippetsCtn} snippets={snippets} loading={!this.state.doneFetching}/>
                         <Paginator
                             page={this.state.paginationParams.page + 1}
                             onLeftIconClick={this.handleBackwardPaging}
@@ -297,6 +304,7 @@ class HomePage extends Component {
                         <div style={styles.emptySnippetMessageCtn}>
                             <InputLabel style={styles.noSnippetMessage}>There are no snippets here</InputLabel>
                         </div>
+                        <SnippetsList style={styles.snippetsCtn} snippets={snippets} loading={!this.state.doneFetching}/>
                         <Paginator
                             page={this.state.paginationParams.page + 1}
                             onLeftIconClick={this.handleBackwardPaging}

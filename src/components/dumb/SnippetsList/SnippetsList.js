@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import SnippetItem from '../../smart/SnippetItem/SnippetItem';
 
 import {styles} from './styles';
@@ -27,15 +28,31 @@ class SnippetsList extends Component {
     render() {
         let snippets = this.props.snippets;
 
-        return (
-            <List style={this.props.style}>{snippets.map(this.renderSnippet)}</List>
-        );
+        if (this.props.loading) {
+            return (
+                <div style={styles.progressCtn}>
+                    <CircularProgress size={50}/>
+                </div>
+            );
+        }
+        else {
+            return (
+                <List style={this.props.style}>{snippets.map(this.renderSnippet)}</List>
+            );
+        }
     }
 }
 
 
 SnippetsList.propTypes = {
-    snippets: PropTypes.array.isRequired
+    snippets: PropTypes.array.isRequired,
+    loading: PropTypes.bool
+};
+
+
+
+SnippetsList.defaultProps = {
+    loading: false
 };
 
 

@@ -67,17 +67,20 @@ class SnippetDetailsPage extends Component {
 
         this.queryingComments = false;
 
+        let sortMode = localStorage.getItem('commentsSortMode');
+
         // Use this sort mode in order to query comments right away so we don't have
         // to wait for the state to propagate through
-        this.sortMode = 'mostRecent';
+        this.sortMode = sortMode ? sortMode : 'mostRecent';
 
         this.state = {
             params: {},
             commentText: '',
             currCommentsPage: 0,
             comments: {},
-            sortMode: 'mostRecent',
-            commentsListSettingsOpen: false
+            sortMode: sortMode ? sortMode : 'mostRecent',
+            commentsListSettingsOpen: false,
+            doneFetchingComments: false
         }
     }
 
@@ -98,6 +101,7 @@ class SnippetDetailsPage extends Component {
 
     queryComments = (queryNext) => {
         if (!this.queryingComments) {
+            this.setState({doneFetchingComments: false});
             this.queryingComments = true;
             const nextPage = this.state.currCommentsPage + 1;
             const queryPage = queryNext !== undefined && queryNext ? nextPage : this.state.currCommentsPage;
@@ -122,14 +126,16 @@ class SnippetDetailsPage extends Component {
                                 comments: {
                                     ...this.state.comments,
                                     [queryPage]: commentIds
-                                }
+                                },
+                                doneFetchingComments: true
                             });
                         else
                             this.setState({
                                 comments: {
                                     ...this.state.comments,
                                     [queryPage]: commentIds
-                                }
+                                },
+                                doneFetchingComments: true
                             });
                     }
                 });
@@ -244,7 +250,10 @@ class SnippetDetailsPage extends Component {
         this.setState({commentsListSettingsOpen: !this.state.commentsListSettingsOpen});
     };
 
-    closeCommentsListSettings = () => {
+    closeCommentsListSettings = (event) => {
+        if (this.settingsButton.contains(event.target)) {
+            return;
+        }
         this.setState({commentsListSettingsOpen: false});
     };
 
@@ -253,6 +262,7 @@ class SnippetDetailsPage extends Component {
             sortMode: event.target.id
         });
         this.sortMode = event.target.id;
+        localStorage.setItem('commentsSortMode', event.target.id);
         this.queryComments();
     };
 
@@ -420,20 +430,19 @@ class SnippetDetailsPage extends Component {
                             />
                         }
 
-                        { comments.length !== 0 &&
-                            <div style={styles.commentsListCtn}>
-                                <IconButton buttonRef={node => {this.settingsButton = node;}}
-                                            onClick={this.toggleCommentsListSettings}
-                                            style={styles.commentsSettingsIcon}
-                                >
-                                    <Settings/>
-                                </IconButton>
-                                <CommentsList
-                                    style={styles.commentsList} comments={comments}
-                                    onScrollToBottom={this.commentsScrolledToBottom}
-                                />
-                            </div>
-                        }
+                        <div style={styles.commentsListCtn}>
+                            <IconButton buttonRef={node => {this.settingsButton = node;}}
+                                        onClick={this.toggleCommentsListSettings}
+                                        style={styles.commentsSettingsIcon}
+                            >
+                                <Settings/>
+                            </IconButton>
+                            <CommentsList
+                                style={styles.commentsList} comments={comments}
+                                onScrollToBottom={this.commentsScrolledToBottom}
+                                loading={!this.state.doneFetchingComments}
+                            />
+                        </div>
                     </div>
 
                     <Popper open={this.state.commentsListSettingsOpen} anchorEl={this.settingsButton}
