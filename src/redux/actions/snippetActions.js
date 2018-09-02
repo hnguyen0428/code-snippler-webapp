@@ -217,6 +217,21 @@ export const searchSnippets = (params, callback, noResCB) => dispatch => {
 };
 
 
+export const fetchRecentSnippets = (params, callback, noResCB) => dispatch => {
+    if (params)
+        params = {...params, languages: Snippler.constructLanguagesFilter()};
+    else
+        params = {languages: Snippler.constructLanguagesFilter()};
+
+    Snippler.snippet().getRecent(params, (res, error) => {
+        let success = handleActionsResult(res, error, callback, noResCB);
+        if (success) {
+            dispatch({type: FETCH_SNIPPETS, payload: res.data});
+        }
+    });
+};
+
+
 export const fetchPopularSnippets = (params, callback, noResCB) => dispatch => {
     if (params)
         params = {...params, languages: Snippler.constructLanguagesFilter()};

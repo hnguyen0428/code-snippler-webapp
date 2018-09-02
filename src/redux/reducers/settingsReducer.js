@@ -1,4 +1,5 @@
-import {SETTINGS_MOST_POPULAR, SETTINGS_MOST_SAVED, SETTINGS_MOST_VIEWS, SETTINGS_MOST_UPVOTED} from '../actions/types';
+import {SETTINGS_MOST_POPULAR, SETTINGS_MOST_SAVED, SETTINGS_MOST_VIEWS, SETTINGS_MOST_UPVOTED,
+    SETTINGS_MOST_RECENT} from '../actions/types';
 import FeedSettings from '../../constants/FeedSettings';
 
 
@@ -33,6 +34,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 feedSettings: FeedSettings.MOST_SAVED
+            };
+        case SETTINGS_MOST_RECENT:
+            localStorage.setItem('feedSettings', FeedSettings.MOST_RECENT);
+            return {
+                ...state,
+                feedSettings: FeedSettings.MOST_RECENT
             };
         default:
             return state

@@ -17,6 +17,7 @@ import Settings from '@material-ui/icons/Settings';
 import Paginator from '../../dumb/Paginator/Paginator';
 
 import {
+    fetchRecentSnippets,
     fetchPopularSnippets,
     fetchMostSavedSnippets,
     fetchMostViewsSnippets,
@@ -39,6 +40,7 @@ class HomePage extends Component {
     MOST_VIEWS_MENUITEM = "mostViews";
     MOST_UPVOTED_MENUITEM = "mostUpvoted";
     MOST_SAVED_MENUITEM = "mostSaved";
+    MOST_RECENT_MENUITEM = "mostRecent";
 
 
     constructor(props) {
@@ -145,6 +147,9 @@ class HomePage extends Component {
             case FeedSettings.MOST_SAVED:
                 this.props.fetchMostSavedSnippets(params, setSnippetIds);
                 return;
+            case FeedSettings.MOST_RECENT:
+                this.props.fetchRecentSnippets(params, setSnippetIds);
+                return;
             default:
                 break;
         }
@@ -202,6 +207,10 @@ class HomePage extends Component {
             case this.MOST_SAVED_MENUITEM:
                 this.props.saveSettings(FeedSettings.MOST_SAVED);
                 this.queryFeed(FeedSettings.MOST_SAVED, null, setSnippetIds);
+                break;
+            case this.MOST_RECENT_MENUITEM:
+                this.props.saveSettings(FeedSettings.MOST_RECENT);
+                this.queryFeed(FeedSettings.MOST_RECENT, null, setSnippetIds);
                 break;
         }
     };
@@ -270,6 +279,12 @@ class HomePage extends Component {
                                                 >
                                                     Most Saved
                                                 </MenuItem>
+                                                <MenuItem id={this.MOST_RECENT_MENUITEM}
+                                                          onClick={this.handleSettingsChange}
+                                                          selected={currentSettings === FeedSettings.MOST_RECENT}
+                                                >
+                                                    Most Recent
+                                                </MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>
                                     </Paper>
@@ -306,6 +321,7 @@ function mapStateToProps(state) {
 
 
 export default withRouter(connect(mapStateToProps, {
+    fetchRecentSnippets,
     fetchPopularSnippets,
     fetchMostSavedSnippets,
     fetchMostViewsSnippets,

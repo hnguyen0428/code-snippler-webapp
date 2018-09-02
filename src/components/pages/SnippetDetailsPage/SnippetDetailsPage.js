@@ -17,21 +17,31 @@ import {
     saveSnippet,
     resetShouldIncreaseView,
     fetchComments,
-    createComment
+    createComment,
+    deleteSnippet
 } from "../../../redux/actions/snippetActions";
-import {overridePath} from "../../../redux/actions/routerActions";
+import {overridePath, resetOverridePath} from "../../../redux/actions/routerActions";
+import {showBinaryAlert, closeBinaryAlert} from '../../../redux/actions/alertActions';
 
 import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
+import Popper from '@material-ui/core/Popper';
+import Paper from '@material-ui/core/Paper';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import Star from '@material-ui/icons/Star';
+import Settings from '@material-ui/icons/Settings';
 
 import {languagesMap} from '../../../constants/languages';
 
@@ -57,11 +67,17 @@ class SnippetDetailsPage extends Component {
 
         this.queryingComments = false;
 
+        // Use this sort mode in order to query comments right away so we don't have
+        // to wait for the state to propagate through
+        this.sortMode = 'mostRecent';
+
         this.state = {
             params: {},
             commentText: '',
             currCommentsPage: 0,
-            comments: {}
+            comments: {},
+            sortMode: 'mostRecent',
+            commentsListSettingsOpen: false
         }
     }
 
@@ -88,7 +104,8 @@ class SnippetDetailsPage extends Component {
             const params = {
                 showUserDetails: true,
                 page: queryPage,
-                pageSize: SnipplerConfig.COMMENTS_LIST_SIZE
+                pageSize: SnipplerConfig.COMMENTS_LIST_SIZE,
+                sort: this.sortMode
             };
 
             this.props.fetchComments(this.props.match.params.snippetId, params,
@@ -98,7 +115,6 @@ class SnippetDetailsPage extends Component {
                         let comments = res.data;
                         let commentIds = [];
                         comments.forEach(comment => {commentIds.push(comment.commentId)});
-                        console.log(comments);
 
                         if (queryNext)
                             this.setState({
@@ -124,6 +140,29 @@ class SnippetDetailsPage extends Component {
     onClickEdit = () => {
         this.props.overridePath(this.props.location.pathname);
         history.push('/snippet?snippetId=' + this.props.match.params.snippetId);
+    };
+
+    onClickDelete = () => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Delete', callback: this.deleteSnippet};
+        this.props.showBinaryAlert('Delete?', 'Are you sure you want to delete this snippet?', actionOne, actionTwo);
+    };
+
+    deleteSnippet = () => {
+        let snippetId = this.props.match.params.snippetId;
+        this.props.deleteSnippet(snippetId, (res, err) => {
+            this.props.closeBinaryAlert();
+            if (res) {
+                let prevPath = this.props.router.prevPath;
+                let overridePath = this.props.router.overridePath;
+                if (overridePath)
+                    history.push(overridePath);
+                else
+                    history.push(prevPath);
+
+                this.props.resetOverridePath();
+            }
+        });
     };
 
 
@@ -201,6 +240,22 @@ class SnippetDetailsPage extends Component {
         this.queryComments(true);
     };
 
+    toggleCommentsListSettings = () => {
+        this.setState({commentsListSettingsOpen: !this.state.commentsListSettingsOpen});
+    };
+
+    closeCommentsListSettings = () => {
+        this.setState({commentsListSettingsOpen: false});
+    };
+
+    handleCommentsSettingsChange = (event) => {
+        this.setState({
+            sortMode: event.target.id
+        });
+        this.sortMode = event.target.id;
+        this.queryComments();
+    };
+
 
     render() {
         let snippetId = this.props.match.params.snippetId;
@@ -215,12 +270,12 @@ class SnippetDetailsPage extends Component {
             let username = user ? user.username : '';
 
             let date = new Date(snippet.createdDate);
-            date = moment(date).format("MMMM Do, YYYY");
+            date = moment(date).calendar();
 
             let updatedDate = null;
             if (snippet.updatedDate) {
                 updatedDate = new Date(snippet.updatedDate);
-                updatedDate = moment(updatedDate).format("MMMM Do, YYYY");
+                updatedDate = moment(updatedDate).calendar();
             }
 
             let comments = [];
@@ -257,6 +312,9 @@ class SnippetDetailsPage extends Component {
                                         <IconButton onClick={this.onClickEdit}>
                                             <Edit/>
                                         </IconButton>
+                                        <IconButton onClick={this.onClickDelete}>
+                                            <Delete/>
+                                        </IconButton>
                                     </div>
                                 }
                             </div>
@@ -282,12 +340,12 @@ class SnippetDetailsPage extends Component {
                             <div style={styles.dateCtn}>
                                 { date &&
                                 <InputLabel style={styles.dateLabel}>
-                                    {date}
+                                    Created {date}
                                 </InputLabel>
                                 }
                                 { updatedDate &&
                                 <InputLabel style={styles.dateLabel}>
-                                    Updated on: {updatedDate}
+                                    Updated {updatedDate}
                                 </InputLabel>
                                 }
                             </div>
@@ -363,12 +421,50 @@ class SnippetDetailsPage extends Component {
                         }
 
                         { comments.length !== 0 &&
-                            <CommentsList
-                                style={styles.commentsList} comments={comments}
-                                onScrollToBottom={this.commentsScrolledToBottom}
-                            />
+                            <div style={styles.commentsListCtn}>
+                                <IconButton buttonRef={node => {this.settingsButton = node;}}
+                                            onClick={this.toggleCommentsListSettings}
+                                            style={styles.commentsSettingsIcon}
+                                >
+                                    <Settings/>
+                                </IconButton>
+                                <CommentsList
+                                    style={styles.commentsList} comments={comments}
+                                    onScrollToBottom={this.commentsScrolledToBottom}
+                                />
+                            </div>
                         }
                     </div>
+
+                    <Popper open={this.state.commentsListSettingsOpen} anchorEl={this.settingsButton}
+                            transition disablePortal>
+                        {({TransitionProps, placement}) => (
+                            <Grow
+                                {...TransitionProps}
+                                style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
+                            >
+                                <Paper>
+                                    <ClickAwayListener onClickAway={this.closeCommentsListSettings}>
+                                        <MenuList>
+                                            <MenuItem disabled>Filter By</MenuItem>
+                                            <MenuItem id="mostRecent"
+                                                      onClick={this.handleCommentsSettingsChange}
+                                                      selected={this.state.sortMode === 'mostRecent'}
+                                            >
+                                                Most Recent
+                                            </MenuItem>
+                                            <MenuItem id="mostUpvoted"
+                                                      onClick={this.handleCommentsSettingsChange}
+                                                      selected={this.state.sortMode === 'mostUpvoted'}
+                                            >
+                                                Most Upvoted
+                                            </MenuItem>
+                                        </MenuList>
+                                    </ClickAwayListener>
+                                </Paper>
+                            </Grow>
+                        )}
+                    </Popper>
                 </div>
             );
         }
@@ -382,7 +478,8 @@ function mapStateToProps(state) {
         auth: state.auth,
         snippets: state.snippets,
         users: state.users,
-        comments: state.comments
+        comments: state.comments,
+        router: state.router
     };
 }
 
@@ -395,7 +492,11 @@ export default withRouter(connect(mapStateToProps,
         saveSnippet,
         resetShouldIncreaseView,
         overridePath,
+        resetOverridePath,
         fetchComments,
-        createComment
+        createComment,
+        deleteSnippet,
+        showBinaryAlert,
+        closeBinaryAlert
     }
 )(withStyles(materialStyles)(SnippetDetailsPage)));

@@ -12,9 +12,6 @@ export const styles = {
         height: 'auto',
         backgroundColor: theme.backgroundColor
     },
-    editButton: {
-
-    },
     contentCtn: {
         width: '800px',
         marginBottom: '50px'
@@ -66,8 +63,15 @@ export const styles = {
         width: 'inherit',
         marginBottom: '10px'
     },
+    commentsListCtn: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    commentsSettingsIcon: {
+        alignSelf: 'flex-end'
+    },
     commentsList: {
-        maxHeight: '400px',
+        maxHeight: '800px',
         overflow: 'auto',
         backgroundColor: 'white',
     },

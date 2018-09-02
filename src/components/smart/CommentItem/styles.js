@@ -25,10 +25,11 @@ export const styles = {
         fontSize: '15px',
         fontFamily: 'Lucida Grande, Sans Serif',
         whiteSpace: 'pre-line',
-        flex: 12,
+        flex: 15,
     },
     editBtn: {
-        flex: 1
+        width: 'auto',
+        height: 25
     },
     iconBtn: {
         marginLeft: '12px',

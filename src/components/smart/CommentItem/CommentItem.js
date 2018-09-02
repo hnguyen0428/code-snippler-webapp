@@ -11,7 +11,15 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import Popper from '@material-ui/core/Popper';
+import Paper from '@material-ui/core/Paper';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 
+import MoreVert from '@material-ui/icons/MoreVert';
 import Edit from '@material-ui/icons/Edit';
 import Done from '@material-ui/icons/Done';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
@@ -19,10 +27,12 @@ import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 
 import history from '../../../root/history';
 
-import {upvoteComment, downvoteComment, updateComment} from '../../../redux/actions/commentActions';
+import {upvoteComment, downvoteComment, updateComment, deleteComment} from '../../../redux/actions/commentActions';
 import {showBinaryAlert, closeBinaryAlert} from '../../../redux/actions/alertActions';
 
 import {styles, materialStyles} from './styles';
+
+const moment = require('moment');
 
 
 class CommentItem extends Component {
@@ -31,7 +41,8 @@ class CommentItem extends Component {
 
         this.state = {
             editMode: false,
-            commentText: this.props.comment.content
+            commentText: this.props.comment.content,
+            anchorEl: null,
         };
     }
 
@@ -81,7 +92,31 @@ class CommentItem extends Component {
     };
 
     onClickEdit = () => {
-        this.setState({editMode: true});
+        this.setState({
+            editMode: true,
+            anchorEl: null
+        });
+    };
+
+    deleteComment = () => {
+        this.props.deleteComment(this.props.comment.commentId, (res, err) => {
+            this.props.closeBinaryAlert();
+        });
+    };
+
+    onClickDelete = () => {
+        let actionOne = {title: 'Dismiss'};
+        let actionTwo = {title: 'Delete', callback: this.deleteComment};
+        this.props.showBinaryAlert('Delete?', 'Are you sure you want to delete this comment?', actionOne, actionTwo);
+        this.setState({
+            anchorEl: null
+        });
+    };
+
+    closeMoreOptionsMenu = () => {
+        this.setState({
+            anchorEl: null
+        });
     };
 
     doneEditing = () => {
@@ -93,11 +128,21 @@ class CommentItem extends Component {
         })
     };
 
+    handleMoreOptions = (event) => {
+        this.setState({
+            anchorEl: event.currentTarget
+        });
+    };
+
 
     render() {
         let {classes, style, comment, ...props} = this.props;
 
         style = {...styles.rootCtn, ...style, };
+
+        let formattedDate = moment(comment.createdDate).calendar();
+        if (comment.updatedDate)
+            formattedDate = 'Updated ' + moment(comment.updatedDate).calendar();
 
         return (
             <ListItem style={style} {...props}>
@@ -130,17 +175,21 @@ class CommentItem extends Component {
                                     fullWidth
                                     disabled={!this.state.editMode}
                                     onChange={this.onEditComment}
+                                    label={formattedDate}
                                     InputProps={{disableUnderline: !this.state.editMode, classes: {input: classes.commentContent}}}
                                 />
 
                                 { this.props.auth.loggedIn && this.props.auth.currentUser.userId === comment.userId &&
-                                    <IconButton style={styles.editBtn}
-                                                onClick={this.state.editMode ? this.doneEditing : this.onClickEdit}>
+                                    <IconButton buttonRef={node => {this.anchorEl = node;}}
+                                                onClick={this.state.editMode ? this.doneEditing : this.handleMoreOptions}
+                                                style={styles.editBtn}
+                                                disableRipple
+                                    >
                                         {
                                             this.state.editMode ?
                                                 <Done/>
                                                 :
-                                                <Edit/>
+                                                <MoreVert/>
                                         }
                                     </IconButton>
                                 }
@@ -167,6 +216,23 @@ class CommentItem extends Component {
                         </Tooltip>
                     </div>
                 </div>
+
+                <Menu
+                    anchorEl={this.state.anchorEl}
+                    open={Boolean(this.state.anchorEl)}
+                    onClose={this.closeMoreOptionsMenu}
+                >
+                    <MenuItem id={this.MOST_POPULAR_MENUITEM}
+                              onClick={this.onClickEdit}
+                    >
+                        Edit
+                    </MenuItem>
+                    <MenuItem id={this.MOST_VIEWS_MENUITEM}
+                              onClick={this.onClickDelete}
+                    >
+                        Delete
+                    </MenuItem>
+                </Menu>
             </ListItem>
         );
     }
@@ -190,6 +256,7 @@ export default connect(mapStateToProps, {
     updateComment,
     upvoteComment,
     downvoteComment,
+    deleteComment,
     showBinaryAlert,
     closeBinaryAlert
 })(withStyles(materialStyles)(CommentItem));
